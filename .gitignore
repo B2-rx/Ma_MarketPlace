@@ -16,7 +16,7 @@ node_modules/
 
 # ===== Bloc 4 : images envoyées par les utilisateurs =====
 # Les uploads ne font pas partie du code, ce sont des données.
-backend/uploads/
+Back_end/uploads/
 
 # ===== Bloc 5 : fichiers du système =====
 # Fichier automatique de Windows pour les miniatures.
