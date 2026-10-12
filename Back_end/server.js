@@ -3,6 +3,10 @@
 // "express" est ici une fonction qui crée notre application serveur.
 const express = require('express');
 
+// Charge db.js : cela ouvre la base et crée la table au démarrage du serveur
+// 🔧 DÉBOGAGE : si cette ligne provoque une erreur, le problème vient de db.js
+const db = require('./db');
+
 // ===== Bloc 2 : créer l'application =====
 // "app" représente notre serveur. Toutes les routes y seront ajoutées.
 const app = express();
