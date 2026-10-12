@@ -1,0 +1,24 @@
+# ===== Bloc 1 : dépendances =====
+# node_modules contient les bibliothèques téléchargées par npm.
+# Elles sont lourdes et se recréent avec "npm install" : inutile de les versionner.
+node_modules/
+
+# ===== Bloc 2 : secrets =====
+# Le fichier .env contiendra nos clés secrètes (ex. clé de session).
+# Un secret publié sur GitHub est un secret perdu : on l'exclut dès le début.
+.env
+
+# ===== Bloc 3 : base de données =====
+# Le fichier SQLite contient les données réelles des utilisateurs.
+# On ne le publie jamais (données personnelles). On fera des sauvegardes à part.
+*.db
+*.sqlite
+
+# ===== Bloc 4 : images envoyées par les utilisateurs =====
+# Les uploads ne font pas partie du code, ce sont des données.
+backend/uploads/
+
+# ===== Bloc 5 : fichiers du système =====
+# Fichier automatique de Windows pour les miniatures.
+Thumbs.db
+
