@@ -24,6 +24,14 @@ const PORT = process.env.PORT || 3000;
 // (Il faut qu'elle soit AVANT les routes.)
 app.use(express.json());
 
+
+// Branche les routes d'authentification : tout ce qui est défini dans
+// routes/auth.js sera accessible sous /api/auth/...
+// ⚠️ Cette ligne doit venir APRÈS express.json(), sinon req.body sera vide.
+// 🔧 DÉBOGAGE : "Cannot POST /api/auth/inscription" = cette ligne manque ou est mal écrite.
+app.use('/api/auth', require('./routes/auth'));
+
+
 // ===== Bloc 5 : une première route =====
 // Une route associe une ADRESSE à une RÉPONSE.
 // app.get = "quand quelqu'un demande cette adresse en lecture (GET)".
@@ -39,3 +47,8 @@ app.get('/api/sante', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
+
+
+
+
+
