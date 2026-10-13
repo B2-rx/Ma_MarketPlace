@@ -7,11 +7,15 @@ const db = require('../db');          // ".." = remonter d'un dossier, vers Back
 // ensuite dans server.js.
 const router = express.Router();
 
+
+
 // ===== Bloc 2 : réglages =====
 // Coût du hachage : plus il est élevé, plus le calcul est lent (donc plus
 // difficile à attaquer). 10 est un bon équilibre pour apprendre.
 // 🔧 À MODIFIER : 12 est plus sûr en production, mais plus lent.
 const COUT_HACHAGE = 10;
+
+
 
 // ===== Bloc 3 : requête SQL préparée =====
 // Les "?" seront remplacés par les vraies valeurs au moment de l'exécution.
@@ -22,6 +26,24 @@ const insererUtilisateur = db.prepare(`
   INSERT INTO utilisateurs (email, telephone, mot_de_passe_hash, role)
   VALUES (?, ?, ?, ?)
 `);
+
+// Cherche un compte par email (on a besoin du hash pour comparer le mot de passe)
+const trouverParEmail = db.prepare(`
+  SELECT id, email, mot_de_passe_hash, role FROM utilisateurs WHERE email = ?
+`);
+
+// Cherche un compte par id (SANS le hash : on ne le sort de la base que si nécessaire)
+const trouverParId = db.prepare(`
+  SELECT id, email, telephone, role FROM utilisateurs WHERE id = ?
+`);
+
+// Hash "leurre", utilisé quand l'email n'existe pas.
+// Pourquoi ? Comparer un hash prend du temps. Sans leurre, un email inconnu
+// recevrait une réponse instantanée, et un attaquant pourrait deviner quels
+// emails ont un compte en chronométrant le serveur.
+const HASH_FICTIF = bcrypt.hashSync('mot-de-passe-fictif', COUT_HACHAGE);
+
+
 
 // ===== Bloc 4 : fonction de validation =====
 // Elle vérifie les données reçues et renvoie la liste des problèmes trouvés.
@@ -67,6 +89,8 @@ function validerInscription(donnees) {
 
   return erreurs;
 }
+
+
 
 // ===== Bloc 5 : la route POST /inscription =====
 // POST = "envoyer des données pour créer quelque chose".
@@ -115,6 +139,82 @@ router.post('/inscription', async (req, res) => {
     console.error('Erreur inscription :', erreur);
     return res.status(500).json({ erreurs: ['Erreur interne du serveur.'] });
   }
+});
+
+// ===== Bloc 5bis : la route POST /connexion =====
+router.post('/connexion', async (req, res) => {
+  const { email, motDePasse } = req.body || {};
+
+  // Vérification minimale : on ne fait pas confiance au type des données reçues
+  if (typeof email !== 'string' || typeof motDePasse !== 'string' || motDePasse.length > 72) {
+    return res.status(400).json({ erreurs: ['Email et mot de passe requis.'] });
+  }
+
+  try {
+    // On cherche le compte (même nettoyage que pour l'inscription)
+    const utilisateur = trouverParEmail.get(email.trim().toLowerCase());
+
+    // On compare TOUJOURS un hash, réel ou leurre, pour que le temps de réponse reste le même
+    const hash = utilisateur ? utilisateur.mot_de_passe_hash : HASH_FICTIF;
+    const motDePasseValide = await bcrypt.compare(motDePasse, hash);
+
+    // Même message dans les deux cas : on ne révèle pas si l'email existe.
+    // 401 = "non authentifié".
+    if (!utilisateur || !motDePasseValide) {
+      return res.status(401).json({ erreurs: ['Email ou mot de passe incorrect.'] });
+    }
+
+    // regenerate = crée un NOUVEL identifiant de session à la connexion.
+    // Cela empêche une attaque où un tiers aurait imposé un identifiant à l'avance.
+    req.session.regenerate((erreur) => {
+      if (erreur) {
+        console.error('Erreur session :', erreur);
+        return res.status(500).json({ erreurs: ['Erreur interne du serveur.'] });
+      }
+
+      // On range dans la session le minimum : l'id et le rôle
+      req.session.utilisateurId = utilisateur.id;
+      req.session.role = utilisateur.role;
+
+      return res.json({
+        message: 'Connexion réussie.',
+        utilisateur: { id: utilisateur.id, email: utilisateur.email, role: utilisateur.role }
+      });
+    });
+  } catch (erreur) {
+    console.error('Erreur connexion :', erreur);
+    return res.status(500).json({ erreurs: ['Erreur interne du serveur.'] });
+  }
+});
+
+// ===== Bloc 5ter : la route GET /moi =====
+// "Qui suis-je ?" Le frontend l'utilisera pour savoir si quelqu'un est connecté.
+router.get('/moi', (req, res) => {
+  // Pas de badge dans la session : non connecté
+  if (!req.session.utilisateurId) {
+    return res.status(401).json({ erreurs: ['Non connecté.'] });
+  }
+
+  const utilisateur = trouverParId.get(req.session.utilisateurId);
+
+  // Le compte n'existe plus en base : la session est périmée, on la détruit
+  if (!utilisateur) {
+    return req.session.destroy(() => {
+      res.status(401).json({ erreurs: ['Non connecté.'] });
+    });
+  }
+
+  return res.json({ utilisateur });
+});
+
+// ===== Bloc 5quater : la route POST /deconnexion =====
+router.post('/deconnexion', (req, res) => {
+  // destroy = supprime la fiche de session côté serveur
+  req.session.destroy(() => {
+    // On supprime aussi le cookie côté navigateur ("connect.sid" = nom par défaut)
+    res.clearCookie('connect.sid');
+    return res.json({ message: 'Déconnexion réussie.' });
+  });
 });
 
 // ===== Bloc 6 : partager le router =====

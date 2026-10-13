@@ -1,7 +1,15 @@
+// Charge le fichier .env : les variables deviennent disponibles dans process.env.
+// ⚠️ Doit être la TOUTE PREMIÈRE ligne, sinon les autres fichiers ne verront pas le secret.
+require('dotenv').config();
+
 // ===== Bloc 1 : importer Express =====
 // "require" charge une bibliothèque installée avec npm.
 // "express" est ici une fonction qui crée notre application serveur.
 const express = require('express');
+
+
+// Bibliothèque qui gère les sessions (le "badge" de l'utilisateur connecté)
+const session = require('express-session');
 
 // Charge db.js : cela ouvre la base et crée la table au démarrage du serveur
 // 🔧 DÉBOGAGE : si cette ligne provoque une erreur, le problème vient de db.js
@@ -23,6 +31,39 @@ const PORT = process.env.PORT || 3000;
 // Cette ligne permet à Express de les lire dans req.body.
 // (Il faut qu'elle soit AVANT les routes.)
 app.use(express.json());
+
+// ===== Sessions =====
+// Sécurité : sans clé secrète, on refuse de démarrer plutôt que d'être mal protégé.
+// 🔧 DÉBOGAGE : cette erreur = le fichier .env manque ou n'est pas dans Back_end.
+if (!process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET manquant : vérifie ton fichier .env');
+}
+
+app.use(session({
+  // Clé qui signe le cookie (lue dans .env, jamais écrite dans le code)
+  secret: process.env.SESSION_SECRET,
+
+  // Ne réécrit pas la session si rien n'a changé
+  resave: false,
+
+  // Ne crée pas de session pour les visiteurs non connectés
+  saveUninitialized: false,
+
+  cookie: {
+    // httpOnly : le JavaScript de la page ne peut pas lire le cookie (limite le vol par XSS)
+    httpOnly: true,
+
+    // lax : le cookie n'est pas envoyé lors de requêtes venant d'autres sites (limite le CSRF)
+    sameSite: 'lax',
+
+    // 🔧 À MODIFIER à la mise en ligne : mets true (HTTPS obligatoire).
+    // En local on est en http, donc false.
+    secure: false,
+
+    // Durée de vie : 7 jours, en millisecondes
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
+}));
 
 
 // Branche les routes d'authentification : tout ce qui est défini dans
