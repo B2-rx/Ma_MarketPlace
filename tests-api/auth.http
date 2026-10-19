@@ -1,0 +1,38 @@
+### ===== INSCRIPTIONS =====
+# ⚠️ Comptes FICTIFS uniquement : ne mets jamais un vrai mot de passe dans ce fichier.
+
+### 1. Inscription d'Alice (client)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "telephone": "+33 6 12 34 56 78",
+  "motDePasse": "Motdepasse1",
+  "role": "client"
+}
+
+### 2. Inscription de la boulangerie (commerçant)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{
+  "email": "boulangerie@example.com",
+  "telephone": "0698765432",
+  "motDePasse": "Croissant2026",
+  "role": "commercant"
+}
+
+### ===== CONNEXION =====
+
+### 3. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "motDePasse": "Motdepasse1"
+}
+
+### 4. Qui suis-je ? (à lancer APRÈS la 3)
+GET http://localhost:3000/api/auth/moi
