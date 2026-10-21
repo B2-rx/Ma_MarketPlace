@@ -1,0 +1,86 @@
+### 1. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 2. Alice tente de lister des produits (refusé)
+GET http://localhost:3000/api/produits
+
+### 3. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 4. Ajouter une baguette
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Baguette", "description": "Tradition, cuite au four à bois.", "prix": 1.2 }
+
+### 5. Ajouter un croissant
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Croissant", "prix": 1.5, "disponible": true }
+
+### 6. Lister mes produits
+GET http://localhost:3000/api/produits
+
+### 7. Modifier la baguette (prix + rupture de stock)
+PUT http://localhost:3000/api/produits/1
+Content-Type: application/json
+
+{ "nom": "Baguette tradition", "description": "Cuite au four à bois.", "prix": 1.3, "disponible": false }
+
+### 8. Données invalides (nom vide, prix à 3 décimales)
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "", "prix": 1.234 }
+
+### 9. Inscription d'un 2e commerçant (l'épicerie)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "telephone": "0611223344", "motDePasse": "Baguette2026", "role": "commercant" }
+
+### 10. Connexion de l'épicerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "motDePasse": "Baguette2026" }
+
+### 11. L'épicerie n'a pas encore de boutique
+GET http://localhost:3000/api/produits
+
+### 12. L'épicerie crée sa boutique
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "Épicerie Fine", "description": "Produits locaux.", "secteur": "epicerie" }
+
+### 13. TEST CLÉ : l'épicerie tente de modifier le produit 1 de la boulangerie
+PUT http://localhost:3000/api/produits/1
+Content-Type: application/json
+
+{ "nom": "Produit piraté", "prix": 0, "disponible": true }
+
+### 14. TEST CLÉ : l'épicerie tente de supprimer le produit 1
+DELETE http://localhost:3000/api/produits/1
+
+### 15. Reconnexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 16. Supprimer le croissant (produit 2)
+DELETE http://localhost:3000/api/produits/6
+
+### 17. Le supprimer une seconde fois
+DELETE http://localhost:3000/api/produits/6
+
+### 18. Lister : seule la baguette doit rester
+GET http://localhost:3000/api/produits
