@@ -21,7 +21,8 @@ db.pragma('foreign_keys = ON');
 
 
 
-// ===== Bloc 4 : créer la table "utilisateurs" =====
+// ===== Bloc 4 : creation des tables  =====
+// table utilisateurs
 // "IF NOT EXISTS" : si la table existe déjà, on ne la recrée pas.
 // Ce code peut donc s'exécuter à chaque démarrage sans rien casser.
 db.exec(`
@@ -72,8 +73,33 @@ db.exec(`
 `);
 console.log('Base de données prête : tables "utilisateurs" et "boutiques" OK');
 
+// ===== Bloc 4ter : créer la table "produits" =====
+db.exec(`
+  CREATE TABLE IF NOT EXISTS produits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
 
+    -- La boutique propriétaire. Si la boutique est supprimée, ses produits aussi.
+    boutique_id INTEGER NOT NULL REFERENCES boutiques(id) ON DELETE CASCADE,
 
+    nom TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+
+    -- Prix en nombre ENTIER : 1.50 est stocké 150 (voir DECIMALES dans routes/produits.js).
+    -- CHECK : la base refuse un prix négatif, même si le code se trompait.
+    prix_entier INTEGER NOT NULL CHECK (prix_entier >= 0),
+
+    -- 1 = visible et commandable, 0 = masqué (rupture de stock).
+    -- SQLite n'a pas de vrai type booléen : on utilise 0 et 1.
+    disponible INTEGER NOT NULL DEFAULT 1 CHECK (disponible IN (0, 1)),
+
+    date_creation TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  -- Index : accélère la recherche "tous les produits d'une boutique",
+  -- qui sera la requête la plus fréquente.
+  CREATE INDEX IF NOT EXISTS idx_produits_boutique ON produits(boutique_id);
+`);
+console.log('Base de données prête : tables "utilisateurs", "boutiques" et "produits" OK');
 
 
 // ===== Bloc 6 : partager la connexion =====

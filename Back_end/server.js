@@ -7,16 +7,16 @@ require('dotenv').config();
 // "express" est ici une fonction qui crée notre application serveur.
 const express = require('express');
 
-
 // Bibliothèque qui gère les sessions (le "badge" de l'utilisateur connecté)
 const session = require('express-session');
 // Outil intégré à Node pour fabriquer des chemins de fichiers
 const path = require('path');
 
-
 // Charge db.js : cela ouvre la base et crée la table au démarrage du serveur
 // 🔧 DÉBOGAGE : si cette ligne provoque une erreur, le problème vient de db.js
 const db = require('./db');
+
+
 
 // ===== Bloc 2 : créer l'application =====
 // "app" représente notre serveur. Toutes les routes y seront ajoutées.
@@ -79,24 +79,23 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
   setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff')
 }));
 
-
+// ===== Bloc 5 : brancher les routes =====
 // Branche les routes d'authentification : tout ce qui est défini dans
 // routes/auth.js sera accessible sous /api/auth/...
 // ⚠️ Cette ligne doit venir APRÈS express.json(), sinon req.body sera vide.
 // 🔧 DÉBOGAGE : "Cannot POST /api/auth/inscription" = cette ligne manque ou est mal écrite.
 app.use('/api/auth', require('./routes/auth'));
 
-
-
-
 // Branche les routes des boutiques : accessibles sous /api/boutiques/...
 app.use('/api/boutiques', require('./routes/boutiques'));
 
+// Branche les routes des produits : accessibles sous /api/produits/...
+app.use('/api/produits', require('./routes/produits'));
 
 
 
 
-// ===== Bloc 5 : une première route =====
+// ===== Bloc 6 : une première route =====
 // Une route associe une ADRESSE à une RÉPONSE.
 // app.get = "quand quelqu'un demande cette adresse en lecture (GET)".
 // req = la requête reçue, res = la réponse qu'on renvoie.
@@ -105,7 +104,7 @@ app.get('/api/sante', (req, res) => {
   res.json({ message: 'Le serveur fonctionne !' });
 });
 
-// ===== Bloc 6 : démarrer le serveur =====
+// ===== Bloc 7 : démarrer le serveur =====
 // listen = "commence à écouter les requêtes sur ce port".
 // La fonction fléchée s'exécute une fois le serveur démarré.
 app.listen(PORT, () => {
