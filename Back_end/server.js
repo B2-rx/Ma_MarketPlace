@@ -72,22 +72,14 @@ app.use(session({
 // 🔧 DÉBOGAGE : "Cannot POST /api/auth/inscription" = cette ligne manque ou est mal écrite.
 app.use('/api/auth', require('./routes/auth'));
 
-// ===== ROUTES DE TEST TEMPORAIRES (à supprimer à l'étape des boutiques) =====
-// 🔧 Les accolades { } récupèrent les deux fonctions exportées par middlewares/auth.js
-const { exigerConnexion, exigerRole } = require('./middlewares/auth');
 
-// Le gardien se place ENTRE l'adresse et la fonction finale : il passe en premier.
-app.get('/api/test/connecte', exigerConnexion, (req, res) => {
-  res.json({ message: 'Accès autorisé : tu es connecté.', role: req.session.role });
-});
 
-app.get('/api/test/client', exigerRole('client'), (req, res) => {
-  res.json({ message: 'Accès autorisé : espace client.' });
-});
 
-app.get('/api/test/commercant', exigerRole('commercant'), (req, res) => {
-  res.json({ message: 'Accès autorisé : espace commerçant.' });
-});
+// Branche les routes des boutiques : accessibles sous /api/boutiques/...
+app.use('/api/boutiques', require('./routes/boutiques'));
+
+
+
 
 
 // ===== Bloc 5 : une première route =====

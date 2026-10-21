@@ -4,6 +4,7 @@
 const Database = require('better-sqlite3');
 const path = require('path');
 
+
 // ===== Bloc 2 : ouvrir (ou créer) la base =====
 // __dirname = le dossier du fichier actuel (Back_end).
 // Si marketplace.db n'existe pas, SQLite le crée automatiquement.
@@ -11,10 +12,14 @@ const path = require('path');
 // (c'est elle que ton .gitignore protège).
 const db = new Database(path.join(__dirname, 'marketplace.db'));
 
+
+
 // ===== Bloc 3 : activer les clés étrangères =====
 // SQLite ne vérifie PAS les liens entre tables par défaut.
 // Cette ligne l'active : on évitera par exemple une commande liée à un client inexistant.
 db.pragma('foreign_keys = ON');
+
+
 
 // ===== Bloc 4 : créer la table "utilisateurs" =====
 // "IF NOT EXISTS" : si la table existe déjà, on ne la recrée pas.
@@ -42,6 +47,32 @@ db.exec(`
     date_creation TEXT NOT NULL DEFAULT (datetime('now'))
   );
 `);
+
+// ===== Bloc 4bis : créer la table "boutiques" =====
+db.exec(`
+  CREATE TABLE IF NOT EXISTS boutiques (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    -- Le commerçant propriétaire. UNIQUE = une seule boutique par commerçant.
+    -- REFERENCES = lien vers utilisateurs(id) : impossible d'utiliser un id inexistant
+    -- (grâce aux clés étrangères activées plus haut).
+    -- ON DELETE CASCADE = si le compte est supprimé, sa boutique l'est aussi.
+    utilisateur_id INTEGER NOT NULL UNIQUE REFERENCES utilisateurs(id) ON DELETE CASCADE,
+
+    nom TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    secteur TEXT NOT NULL,
+
+    -- On stocke uniquement le CHEMIN de l'image (ex. "uploads/boutique-1.jpg"),
+    -- jamais l'image elle-même. NULL = pas encore d'image.
+    image_chemin TEXT,
+
+    date_creation TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+console.log('Base de données prête : tables "utilisateurs" et "boutiques" OK');
+
+
 
 // ===== Bloc 5 : confirmation dans le terminal =====
 console.log('Base de données prête : table "utilisateurs" OK');

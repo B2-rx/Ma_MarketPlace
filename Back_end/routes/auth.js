@@ -219,3 +219,5 @@ router.post('/deconnexion', (req, res) => {
 
 // ===== Bloc 6 : partager le router =====
 module.exports = router;
+
+
