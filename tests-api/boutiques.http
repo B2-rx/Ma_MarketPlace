@@ -1,0 +1,47 @@
+### 1. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 2. Alice tente de créer une boutique (doit être refusé)
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "Boutique pirate", "description": "", "secteur": "autre" }
+
+### 3. Connexion de la boulangerie (commerçant)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 4. Lire sa boutique avant création
+GET http://localhost:3000/api/boutiques/ma-boutique
+
+### 5. Créer la boutique
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "Boulangerie du Coin", "description": "Pain frais et viennoiseries.", "secteur": "boulangerie" }
+
+### 6. Lire sa boutique
+GET http://localhost:3000/api/boutiques/ma-boutique
+
+### 7. Modifier le nom (même route)
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "Boulangerie du Centre", "description": "Pain frais et viennoiseries.", "secteur": "boulangerie" }
+
+### 8. Données invalides
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "", "description": 12345, "secteur": "armes" }
+
+### 9. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 10. Sans être connecté
+GET http://localhost:3000/api/boutiques/ma-boutique

@@ -74,8 +74,7 @@ console.log('Base de données prête : tables "utilisateurs" et "boutiques" OK')
 
 
 
-// ===== Bloc 5 : confirmation dans le terminal =====
-console.log('Base de données prête : table "utilisateurs" OK');
+
 
 // ===== Bloc 6 : partager la connexion =====
 // Les autres fichiers feront : const db = require('./db');

@@ -10,6 +10,9 @@ const express = require('express');
 
 // Bibliothèque qui gère les sessions (le "badge" de l'utilisateur connecté)
 const session = require('express-session');
+// Outil intégré à Node pour fabriquer des chemins de fichiers
+const path = require('path');
+
 
 // Charge db.js : cela ouvre la base et crée la table au démarrage du serveur
 // 🔧 DÉBOGAGE : si cette ligne provoque une erreur, le problème vient de db.js
@@ -25,6 +28,8 @@ const app = express();
 // sinon on utilise 3000.
 // 🔧 À MODIFIER : change 3000 si ce port est déjà occupé sur ton ordinateur.
 const PORT = process.env.PORT || 3000;
+
+
 
 // ===== Bloc 4 : lire le JSON =====
 // Les formulaires enverront des données au format JSON.
@@ -63,6 +68,15 @@ app.use(session({
     // Durée de vie : 7 jours, en millisecondes
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
+}));
+
+// ===== Images envoyées =====
+// Rend le dossier uploads/ accessible dans le navigateur : /uploads/mon-image.png
+// Les images de boutiques sont publiques, les clients doivent pouvoir les voir.
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  // nosniff : le navigateur doit respecter le type du fichier annoncé par le serveur
+  // et ne pas "deviner" qu'un fichier est autre chose (protection supplémentaire).
+  setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff')
 }));
 
 

@@ -1,0 +1,80 @@
+### 1. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 2. Alice tente d'envoyer une image (doit être refusé)
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="boutique.png"
+Content-Type: image/png
+
+< ./images-test/boutique.png
+--LimiteTest--
+
+### 3. Connexion de la boulangerie (commerçant)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 4. Vraie image (doit réussir)
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="boutique.png"
+Content-Type: image/png
+
+< ./images-test/boutique.png
+--LimiteTest--
+
+### 5. Faux fichier déguisé en PNG (doit être refusé)
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="faux.png"
+Content-Type: image/png
+
+< ./images-test/faux.png
+--LimiteTest--
+
+### 6. Fichier de 3 Mo (doit être refusé)
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="trop-gros.png"
+Content-Type: image/png
+
+< ./images-test/trop-gros.png
+--LimiteTest--
+
+### 7. Remplacement de l'image (doit réussir, avec un nouveau nom)
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="boutique.png"
+Content-Type: image/png
+
+< ./images-test/boutique.png
+--LimiteTest--
+
+### 8. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 9. Sans être connecté (doit être refusé)
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="boutique.png"
+Content-Type: image/png
+
+< ./images-test/boutique.png
+--LimiteTest--
