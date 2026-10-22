@@ -1,0 +1,17 @@
+### 1. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 2. Qui suis-je ?
+GET http://localhost:3000/api/auth/moi
+
+### 3. APRÈS avoir REDÉMARRÉ le serveur : suis-je toujours connectée ?
+GET http://localhost:3000/api/auth/moi
+
+### 4. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 5. Qui suis-je ? (doit être refusé)
+GET http://localhost:3000/api/auth/moi
