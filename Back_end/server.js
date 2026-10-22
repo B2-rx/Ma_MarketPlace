@@ -22,6 +22,10 @@ const db = require('./db');
 // "app" représente notre serveur. Toutes les routes y seront ajoutées.
 const app = express();
 
+// Ne dit plus "X-Powered-By: Express" dans les réponses
+app.disable('x-powered-by');
+
+
 // ===== Bloc 3 : le port =====
 // Le port est le "numéro de porte" sur lequel le serveur écoute.
 // process.env.PORT permet à un hébergeur d'imposer son port plus tard ;
@@ -35,7 +39,9 @@ const PORT = process.env.PORT || 3000;
 // Les formulaires enverront des données au format JSON.
 // Cette ligne permet à Express de les lire dans req.body.
 // (Il faut qu'elle soit AVANT les routes.)
-app.use(express.json());
+// Refuse les corps JSON de plus de 10 Ko (protège contre les envois géants)
+app.use(express.json({ limit: '10kb' }));
+
 
 // ===== Sessions =====
 // Sécurité : sans clé secrète, on refuse de démarrer plutôt que d'être mal protégé.
@@ -79,6 +85,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
   setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff')
 }));
 
+
+
 // ===== Bloc 5 : brancher les routes =====
 // Branche les routes d'authentification : tout ce qui est défini dans
 // routes/auth.js sera accessible sous /api/auth/...
@@ -103,6 +111,46 @@ app.get('/api/sante', (req, res) => {
   // res.json envoie une réponse au format JSON (le langage d'échange des API)
   res.json({ message: 'Le serveur fonctionne !' });
 });
+
+
+
+/* ===== Gestion des erreurs ===== */
+
+// Toute adresse /api/... qui n'existe pas répond en JSON, pas en page HTML
+app.use('/api', (req, res) => {
+  res.status(404).json({ erreurs: ['Route introuvable.'] });
+});
+
+/*
+  Gestionnaire d'erreurs global : Express l'appelle quand une erreur
+  n'a été attrapée nulle part.
+  ⚠️ Il DOIT avoir exactement 4 paramètres, sinon Express ne le reconnaît pas.
+  Il doit aussi venir EN DERNIER, après toutes les routes.
+*/
+app.use((erreur, req, res, next) => {
+  // Si la réponse est déjà partie, on laisse Express terminer
+  if (res.headersSent) {
+    return next(erreur);
+  }
+
+  // JSON mal écrit dans la requête (virgule oubliée, accolade manquante...)
+  if (erreur.type === 'entity.parse.failed') {
+    return res.status(400).json({ erreurs: ['JSON invalide.'] });
+  }
+
+  // JSON plus gros que la limite de 10 Ko
+  if (erreur.type === 'entity.too.large') {
+    return res.status(413).json({ erreurs: ['Requête trop volumineuse.'] });
+  }
+
+  /*
+    Toute autre erreur : on la note dans le terminal (pour toi),
+    mais on ne montre AUCUN détail à l'utilisateur.
+  */
+  console.error('Erreur non prévue :', erreur);
+  return res.status(500).json({ erreurs: ['Erreur interne du serveur.'] });
+});
+
 
 // ===== Bloc 7 : démarrer le serveur =====
 // listen = "commence à écouter les requêtes sur ce port".

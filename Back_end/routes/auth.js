@@ -1,3 +1,13 @@
+/* a faire : c) branche les deux routes. Le limiteur 
+se place entre l’adresse et la fonction, comme un gardien 
+installer express-rate-limit dans le powershell 
+*/
+
+
+// Compteur de requêtes par adresse IP
+const { rateLimit } = require('express-rate-limit');
+
+
 // ===== Bloc 1 : importer les outils =====
 const express = require('express');
 const bcrypt = require('bcryptjs');   // pour hacher les mots de passe
@@ -9,11 +19,50 @@ const router = express.Router();
 
 
 
-// ===== Bloc 2 : réglages =====
-// Coût du hachage : plus il est élevé, plus le calcul est lent (donc plus
-// difficile à attaquer). 10 est un bon équilibre pour apprendre.
-// 🔧 À MODIFIER : 12 est plus sûr en production, mais plus lent.
+/* ===== Bloc 2 : réglages =====
+  Coût du hachage : plus il est élevé, plus le calcul est lent (donc plus
+  difficile à attaquer). 10 est un bon équilibre pour apprendre.
+  🔧 À MODIFIER : 12 est plus sûr en production, mais plus lent.
+*/
 const COUT_HACHAGE = 10;
+
+/* ===== Bloc 2bis : limiteurs d'essais ===== */
+
+/*
+  Limiteur de connexion : 5 échecs maximum par tranche de 15 minutes
+  et par adresse IP.
+  🔧 À MODIFIER : change "limit" (nombre d'essais) ou "windowMs" (durée en ms).
+*/
+const limiteurConnexion = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+
+  /*
+    Les connexions RÉUSSIES ne comptent pas : seuls les échecs (codes 400 et plus)
+    remplissent le compteur. Un vrai utilisateur n'est donc jamais bloqué.
+  */
+  skipSuccessfulRequests: true,
+
+  // Envoie des en-têtes standard qui indiquent le nombre d'essais restants
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+
+  // Réponse au même format que le reste de l'API (le code est 429 par défaut)
+  message: { erreurs: ['Trop de tentatives. Réessaie dans quelques minutes.'] }
+});
+
+/*
+  Limiteur d'inscription : 20 requêtes par heure et par adresse IP.
+  Large exprès : on refait souvent les tests en développement.
+  🔧 À MODIFIER : en production, descends à 5 ou 10.
+*/
+const limiteurInscription = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 20,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { erreurs: ['Trop de créations de compte. Réessaie plus tard.'] }
+});
 
 
 
@@ -95,7 +144,8 @@ function validerInscription(donnees) {
 // ===== Bloc 5 : la route POST /inscription =====
 // POST = "envoyer des données pour créer quelque chose".
 // L'adresse complète sera /api/auth/inscription (le début est défini dans server.js).
-router.post('/inscription', async (req, res) => {
+router.post('/inscription', limiteurInscription, async (req, res) => {
+
   // req.body contient le JSON envoyé. "|| {}" évite un plantage s'il est absent.
   const donnees = req.body || {};
 
@@ -142,7 +192,7 @@ router.post('/inscription', async (req, res) => {
 });
 
 // ===== Bloc 5bis : la route POST /connexion =====
-router.post('/connexion', async (req, res) => {
+router.post('/connexion', limiteurConnexion, async (req, res) => {
   const { email, motDePasse } = req.body || {};
 
   // Vérification minimale : on ne fait pas confiance au type des données reçues
