@@ -16,6 +16,9 @@ const path = require('path');
 // 🔧 DÉBOGAGE : si cette ligne provoque une erreur, le problème vient de db.js
 const db = require('./db');
 
+// Notre stockage de sessions dans SQLite
+const StockageSqlite = require('./session-store');
+
 
 
 // ===== Bloc 2 : créer l'application =====
@@ -54,6 +57,9 @@ app.use(session({
   // Clé qui signe le cookie (lue dans .env, jamais écrite dans le code)
   secret: process.env.SESSION_SECRET,
 
+ // Où ranger les sessions : dans la base, plus en mémoire
+  store: new StockageSqlite(db),
+
   // Ne réécrit pas la session si rien n'a changé
   resave: false,
 
@@ -75,6 +81,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }));
+
 
 // ===== Images envoyées =====
 // Rend le dossier uploads/ accessible dans le navigateur : /uploads/mon-image.png
