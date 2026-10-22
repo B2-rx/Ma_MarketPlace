@@ -1,0 +1,56 @@
+### 1. JSON invalide (accolade jamais fermée)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", 
+
+### 2. Route inconnue
+GET http://localhost:3000/api/nimporte-quoi
+
+### 3. Échec de connexion n° 1
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Faux1234567" }
+
+### 4. Échec n° 2
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Faux1234567" }
+
+### 5. Échec n° 3
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Faux1234567" }
+
+### 6. Échec n° 4
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Faux1234567" }
+
+### 7. Échec n° 5
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Faux1234567" }
+
+### 8. Échec n° 6 : le limiteur doit bloquer
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Faux1234567" }
+
+### 9. Même avec le BON mot de passe, tu es bloqué
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 10. À lancer APRÈS avoir redémarré le serveur : le blocage a disparu
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
