@@ -110,6 +110,9 @@ app.use('/api/produits', require('./routes/produits'));
 // Branche la consultation publique : accessible sous /api/catalogue/...
 app.use('/api/catalogue', require('./routes/catalogue'));
 
+// Branche le panier du client : accessible sous /api/panier/...
+app.use('/api/panier', require('./routes/panier'));
+
 
 // ===== Bloc 6 : une première route =====
 // Une route associe une ADRESSE à une RÉPONSE.

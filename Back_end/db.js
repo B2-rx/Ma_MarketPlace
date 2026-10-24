@@ -102,6 +102,26 @@ db.exec(`
 console.log('Base de données prête : tables "utilisateurs", "boutiques" et "produits" OK');
 
 
+/* ===== Bloc 4quater : créer la table "panier_lignes" ===== */
+db.exec(`
+  CREATE TABLE IF NOT EXISTS panier_lignes (
+    -- Le client propriétaire du panier. Compte supprimé = panier supprimé.
+    utilisateur_id INTEGER NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
+
+    -- Produit supprimé par le commerçant = il disparaît aussi des paniers.
+    produit_id INTEGER NOT NULL REFERENCES produits(id) ON DELETE CASCADE,
+
+    -- La base refuse une quantité hors de 1 à 20, même si le code se trompait.
+    quantite INTEGER NOT NULL CHECK (quantite BETWEEN 1 AND 20),
+
+    date_ajout TEXT NOT NULL DEFAULT (datetime('now')),
+
+    -- Clé composée : un même produit ne peut figurer qu'une fois par client.
+    PRIMARY KEY (utilisateur_id, produit_id)
+  );
+`);
+console.log('Base de données prête : tables "utilisateurs", "boutiques", "produits" et "panier_lignes" OK');
+
 // ===== Bloc 6 : partager la connexion =====
 // Les autres fichiers feront : const db = require('./db');
 module.exports = db;

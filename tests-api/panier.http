@@ -1,0 +1,91 @@
+### P1. Connexion de l'épicerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "motDePasse": "Baguette2026" }
+
+### P2. Ajouter un produit à l'épicerie (note l'id dans la réponse)
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Miel de fleurs", "description": "Produit local.", "prix": 5.5 }
+
+### P3. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+
+### 1. Sans être connecté
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 2 }
+
+### 2. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 3. Ajouter 2 croissants (produit 3)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 2 }
+
+### 4. Ajouter 3 croissants de plus (le total doit passer à 5)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 3 }
+
+### 5. Ajouter 1 pain au chocolat (produit 4, même boutique)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 4, "quantite": 1 }
+
+### 6. Produit en rupture (la baguette tradition, produit 1)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 1, "quantite": 1 }
+
+### 7. Produit inexistant
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 9999, "quantite": 1 }
+
+### 8. Données invalides
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": "abc", "quantite": 0 }
+
+### 9. Dépassement : 5 + 16 = 21
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 16 }
+
+### 10. TEST CLÉ : produit d'une AUTRE boutique (mets ici l'id du miel, vu en P2)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 7, "quantite": 1 }
+
+### 11. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 12. Connexion de la boulangerie (commerçant)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 13. Un commerçant tente d'utiliser le panier
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }

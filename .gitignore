@@ -22,3 +22,6 @@ Back_end/uploads/
 # Fichier automatique de Windows pour les miniatures.
 Thumbs.db
 
+# on ignore les rapports pour l'instant 
+Rapport j-1.docx
+Rapport j-2.docx
