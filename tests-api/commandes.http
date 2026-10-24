@@ -1,0 +1,92 @@
+### 1. Sans être connecté
+POST http://localhost:3000/api/commandes
+
+### 2. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 3. Vider le panier (point de départ propre)
+DELETE http://localhost:3000/api/panier
+
+### 4. Commander avec un panier vide
+POST http://localhost:3000/api/commandes
+
+### 5. Ajouter 2 croissants (produit 3)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 2 }
+
+### 6. Ajouter 1 pain au chocolat (produit 4)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 4, "quantite": 1 }
+
+### 7. Passer la commande
+POST http://localhost:3000/api/commandes
+
+### 8. Le panier doit être vide
+GET http://localhost:3000/api/panier
+
+### 9. Ajouter 1 croissant (il sera mis en rupture ensuite)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }
+
+### 10. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 11. Connexion de la boulangerie (commerçant)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 12. Un commerçant tente de commander
+POST http://localhost:3000/api/commandes
+
+### 13. Croissant : prix changé à 9.99 ET mis en rupture
+PUT http://localhost:3000/api/produits/3
+Content-Type: application/json
+
+{ "nom": "Croissant", "description": "", "prix": 9.99, "disponible": false }
+
+### 14. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 15. Reconnexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 16. Commander avec un produit en rupture
+POST http://localhost:3000/api/commandes
+
+### 17. Le panier doit être INTACT
+GET http://localhost:3000/api/panier
+
+### 18. Retirer le croissant du panier
+DELETE http://localhost:3000/api/panier/lignes/3
+
+### 19. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 20. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 21. Croissant remis à 1.5, disponible
+PUT http://localhost:3000/api/produits/3
+Content-Type: application/json
+
+{ "nom": "Croissant", "description": "", "prix": 1.5, "disponible": true }
+
+### 22. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion

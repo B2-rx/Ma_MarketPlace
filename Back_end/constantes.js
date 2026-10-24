@@ -14,5 +14,15 @@ const SECTEURS = ['restauration', 'boulangerie', 'epicerie', 'boissons', 'autre'
 const DECIMALES = 2;
 const FACTEUR = 10 ** DECIMALES;   // 100 pour 2 décimales
 
+/*
+  Statuts d'une commande, dans l'ordre de son cycle de vie.
+  Une commande naît "en_preparation". "terminee" et "annulee" sont des statuts finaux.
+  ⚠️ Cette liste doit rester identique au CHECK de la table "commandes" (db.js).
+*/
+const STATUTS = ['en_preparation', 'prete', 'en_livraison', 'terminee', 'annulee'];
+const STATUT_INITIAL = STATUTS[0];
 
-module.exports = { SECTEURS, DECIMALES, FACTEUR };
+
+module.exports = { SECTEURS, DECIMALES, FACTEUR, STATUTS, STATUT_INITIAL };
+
+

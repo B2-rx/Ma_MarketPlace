@@ -122,6 +122,58 @@ db.exec(`
 `);
 console.log('Base de données prête : tables "utilisateurs", "boutiques", "produits" et "panier_lignes" OK');
 
+
+
+/* ===== Bloc 4quinquies : créer les tables "commandes" et "commande_lignes" ===== */
+db.exec(`
+  CREATE TABLE IF NOT EXISTS commandes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    /*
+      Pas de ON DELETE CASCADE ici : un compte ou une boutique qui a des
+      commandes ne peut pas être supprimé. L'historique reste intact.
+    */
+    utilisateur_id INTEGER NOT NULL REFERENCES utilisateurs(id),
+    boutique_id INTEGER NOT NULL REFERENCES boutiques(id),
+
+    -- Copie du nom de la boutique à l'instant de la commande
+    boutique_nom TEXT NOT NULL,
+
+    -- ⚠️ Même liste que STATUTS dans constantes.js
+    statut TEXT NOT NULL DEFAULT 'en_preparation'
+      CHECK (statut IN ('en_preparation', 'prete', 'en_livraison', 'terminee', 'annulee')),
+
+    -- Total en nombre ENTIER (460 = 4.60), calculé par le serveur
+    total_entier INTEGER NOT NULL CHECK (total_entier >= 0),
+
+    date_creation TEXT NOT NULL DEFAULT (datetime('now')),
+    date_mise_a_jour TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE IF NOT EXISTS commande_lignes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    -- Commande supprimée = ses lignes aussi
+    commande_id INTEGER NOT NULL REFERENCES commandes(id) ON DELETE CASCADE,
+
+    -- Produit supprimé par le commerçant : la ligne reste, le lien devient NULL
+    produit_id INTEGER REFERENCES produits(id) ON DELETE SET NULL,
+
+    -- COPIES du nom et du prix au moment de l'achat : l'historique ne bouge plus
+    nom TEXT NOT NULL,
+    prix_unitaire_entier INTEGER NOT NULL CHECK (prix_unitaire_entier >= 0),
+    quantite INTEGER NOT NULL CHECK (quantite BETWEEN 1 AND 20)
+  );
+
+  -- Accélèrent l'historique du client, le tableau de bord du commerçant et le détail
+  CREATE INDEX IF NOT EXISTS idx_commandes_utilisateur ON commandes(utilisateur_id);
+  CREATE INDEX IF NOT EXISTS idx_commandes_boutique ON commandes(boutique_id);
+  CREATE INDEX IF NOT EXISTS idx_lignes_commande ON commande_lignes(commande_id);
+`);
+console.log('Base de données prête : toutes les tables OK');
+
+
+
 // ===== Bloc 6 : partager la connexion =====
 // Les autres fichiers feront : const db = require('./db');
 module.exports = db;
