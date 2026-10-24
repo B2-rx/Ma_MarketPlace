@@ -107,7 +107,8 @@ app.use('/api/boutiques', require('./routes/boutiques'));
 // Branche les routes des produits : accessibles sous /api/produits/...
 app.use('/api/produits', require('./routes/produits'));
 
-
+// Branche la consultation publique : accessible sous /api/catalogue/...
+app.use('/api/catalogue', require('./routes/catalogue'));
 
 
 // ===== Bloc 6 : une première route =====

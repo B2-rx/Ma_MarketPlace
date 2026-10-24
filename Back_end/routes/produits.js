@@ -2,17 +2,12 @@
 const express = require('express');
 const db = require('../db');
 const { exigerRole } = require('../middlewares/auth');
-
+const { DECIMALES, FACTEUR } = require('../constantes');
 const router = express.Router();
 
 
 
 // ===== Bloc 2 : réglages =====
-// Nombre de décimales de ta monnaie. 2 pour l'euro (1.50), 0 pour une monnaie
-// sans centimes (les prix sont alors des nombres entiers).
-// 🔧 À MODIFIER : choisis-le AVANT d'enregistrer des produits, on ne le change pas ensuite.
-const DECIMALES = 2;
-const FACTEUR = 10 ** DECIMALES;   // 100 pour 2 décimales
 
 // 🔧 À MODIFIER : prix maximum autorisé (dans l'unité normale, ex. en euros)
 const PRIX_MAX = 10000000;

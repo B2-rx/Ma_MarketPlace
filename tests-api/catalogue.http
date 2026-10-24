@@ -1,0 +1,40 @@
+### P1. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### P2. Ajouter un produit disponible
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Pain au chocolat", "description": "Pur beurre.", "prix": 1.6 }
+
+### P3. Mettre la baguette (produit 1) en rupture
+PUT http://localhost:3000/api/produits/1
+Content-Type: application/json
+
+{ "nom": "Baguette tradition", "description": "Cuite au four à bois.", "prix": 1.3, "disponible": false }
+
+### P4. Déconnexion : les tests suivants se font SANS compte
+POST http://localhost:3000/api/auth/deconnexion
+
+
+
+### 1. Liste de toutes les boutiques
+GET http://localhost:3000/api/catalogue/boutiques
+
+### 2. Filtre par secteur
+GET http://localhost:3000/api/catalogue/boutiques?secteur=boulangerie
+
+### 3. Secteur invalide
+GET http://localhost:3000/api/catalogue/boutiques?secteur=armes
+
+### 4. Détail de la boutique 1 (adapte l'id à celui de ta boulangerie)
+GET http://localhost:3000/api/catalogue/boutiques/1
+
+### 5. Boutique inexistante
+GET http://localhost:3000/api/catalogue/boutiques/9999
+
+### 6. Identifiant absurde
+GET http://localhost:3000/api/catalogue/boutiques/abc

@@ -9,18 +9,11 @@ const multer = require('multer');   // décoder les envois de fichiers
 
 // Notre gardien : il bloque les comptes qui n'ont pas le bon rôle
 const { exigerRole } = require('../middlewares/auth');
-
+const { SECTEURS } = require('../constantes'); // 
 const router = express.Router();
 
 
 /* ===== Bloc 2 : réglages ===== */
-
-/*
-  Liste des secteurs autorisés. Le client enverra l'un d'eux,
-  jamais un texte libre.
-  🔧 À MODIFIER : pour ajouter un secteur, ajoute-le ici (un seul endroit).
-*/
-const SECTEURS = ['restauration', 'boulangerie', 'epicerie', 'boissons', 'autre'];
 
 // Dossier des images : Back_end/uploads (".." remonte de routes/ vers Back_end)
 const DOSSIER_UPLOADS = path.join(__dirname, '..', 'uploads');
