@@ -58,6 +58,37 @@ const ANNULE_PAR_CLIENT = 'client';
 const ANNULE_PAR_COMMERCANT = 'commercant';
 
 
+/*
+  Transitions autorisées pour le COMMERÇANT : statut actuel -> actions possibles.
+  "libelle" est le texte du bouton affiché dans le tableau de bord.
+  🔧 À MODIFIER : pour changer une règle, modifie seulement ce tableau.
+  Jamais de retour vers "en_attente" : une commande acceptée ne redevient pas
+  "en attente".
+*/
+const TRANSITIONS_COMMERCANT = {
+  en_attente: [
+    { vers: 'en_preparation', libelle: 'Accepter' },
+    { vers: 'refusee', libelle: 'Refuser' }
+  ],
+  en_preparation: [
+    { vers: 'prete', libelle: 'Prête à être livrée' },
+    { vers: 'annulee', libelle: 'Annuler (rupture de stock)' }
+  ],
+  prete: [
+    { vers: 'en_livraison', libelle: 'En livraison' },
+    { vers: 'en_preparation', libelle: 'Revenir en préparation' },
+    { vers: 'annulee', libelle: 'Annuler' }
+  ],
+  en_livraison: [
+    { vers: 'terminee', libelle: 'Terminée' },
+    { vers: 'prete', libelle: 'Revenir à prête' }
+  ],
+  terminee: [],
+  annulee: [],
+  refusee: []
+};
+
+
 module.exports = {
   SECTEURS,
   DECIMALES,
@@ -68,5 +99,6 @@ module.exports = {
   LIBELLES_STATUTS,
   STATUTS_ANNULABLES_CLIENT,
   ANNULE_PAR_CLIENT,
-  ANNULE_PAR_COMMERCANT
+  ANNULE_PAR_COMMERCANT,
+  TRANSITIONS_COMMERCANT
 };
