@@ -1,0 +1,220 @@
+### ===== A. ALICE : accès refusé, puis deux commandes =====
+
+### 1. Sans être connecté
+GET http://localhost:3000/api/commercant/commandes
+
+### 2. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 3. Un client tente le tableau de bord
+GET http://localhost:3000/api/commercant/commandes
+
+### 4. Vider le panier
+DELETE http://localhost:3000/api/panier
+
+### 5. Ajouter 1 croissant (produit 3)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }
+
+### 6. Commander (id 3)
+POST http://localhost:3000/api/commandes
+
+### 7. Ajouter 1 croissant
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }
+
+### 8. Commander (id 4)
+POST http://localhost:3000/api/commandes
+
+### 9. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== B. ÉPICERIE : une autre boutique =====
+
+### 10. Connexion de l'épicerie (commerçant)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "motDePasse": "Baguette2026" }
+
+### 11. TEST CLÉ : l'épicerie lit la commande 3 de la boulangerie
+GET http://localhost:3000/api/commercant/commandes/3
+
+### 12. TEST CLÉ : l'épicerie tente d'accepter la commande 3
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+### 13. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== C. BOULANGERIE : le cycle complet =====
+
+### 14. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 15. Liste : commandes 4, 3 et 2 (la plus récente d'abord)
+GET http://localhost:3000/api/commercant/commandes
+
+### 16. Filtre invalide
+GET http://localhost:3000/api/commercant/commandes?statut=nimporte
+
+### 17. Détail de la commande 3 : téléphone du client, 2 boutons
+GET http://localhost:3000/api/commercant/commandes/3
+
+### 18. Saut interdit : en_attente vers terminee
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "terminee" }
+
+### 19. Statut inconnu
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "bizarre" }
+
+### 20. Accepter la commande 3
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+### 21. Retour vers en_attente : interdit
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "en_attente" }
+
+### 22. Prête
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "prete" }
+
+### 23. Retour d'un cran : en préparation
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+### 24. De nouveau prête
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "prete" }
+
+### 25. En livraison
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "en_livraison" }
+
+### 26. Annuler en livraison : interdit
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "annulee" }
+
+### 27. Terminée
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "terminee" }
+
+### 28. Depuis terminée : plus rien n'est possible
+PATCH http://localhost:3000/api/commercant/commandes/3/statut
+Content-Type: application/json
+
+{ "statut": "en_livraison" }
+
+### 29. Accepter la commande 4
+PATCH http://localhost:3000/api/commercant/commandes/4/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+### 30. Commande 4 : prête
+PATCH http://localhost:3000/api/commercant/commandes/4/statut
+Content-Type: application/json
+
+{ "statut": "prete" }
+
+### 31. Refuser la commande 2
+PATCH http://localhost:3000/api/commercant/commandes/2/statut
+Content-Type: application/json
+
+{ "statut": "refusee" }
+
+### 32. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== D. ALICE : le bouton « annuler » est grisé =====
+
+### 33. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 34. Annuler la commande 3 (terminée)
+POST http://localhost:3000/api/commandes/3/annuler
+
+### 35. Annuler la commande 4 (prête)
+POST http://localhost:3000/api/commandes/4/annuler
+
+### 36. Commande 4 : annulable false
+GET http://localhost:3000/api/commandes/4
+
+### 37. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== E. BOULANGERIE : annulation pour rupture de stock =====
+
+### 38. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 39. Annuler la commande 4 (rupture de stock)
+PATCH http://localhost:3000/api/commercant/commandes/4/statut
+Content-Type: application/json
+
+{ "statut": "annulee" }
+
+### 40. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== F. ALICE voit le résultat =====
+
+### 41. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 42. Commande 4 : annulée par le commerçant
+GET http://localhost:3000/api/commandes/4
+
+### 43. Commande 2 : refusée
+GET http://localhost:3000/api/commandes/2
+
+### 44. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
