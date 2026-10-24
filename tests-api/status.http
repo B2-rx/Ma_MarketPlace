@@ -1,0 +1,71 @@
+### 1. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 2. Vider le panier
+DELETE http://localhost:3000/api/panier
+
+### 3. Ajouter 2 croissants (produit 3)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 2 }
+
+### 4. Passer commande (id 1)
+POST http://localhost:3000/api/commandes
+
+### 5. Suivi de la commande 1
+GET http://localhost:3000/api/commandes/1
+
+### 6. L'annuler
+POST http://localhost:3000/api/commandes/1/annuler
+
+### 7. L'annuler une seconde fois
+POST http://localhost:3000/api/commandes/1/annuler
+
+### 8. Suivi : statut annulée
+GET http://localhost:3000/api/commandes/1
+
+### 9. Ajouter 1 croissant
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }
+
+### 10. Passer une 2e commande (id 2)
+POST http://localhost:3000/api/commandes
+
+### 11. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 12. Connexion de Bob
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "bob@example.com", "motDePasse": "Bobpass2026" }
+
+### 13. TEST CLÉ : Bob tente d'annuler la commande 2 d'Alice
+POST http://localhost:3000/api/commandes/2/annuler
+
+### 14. Bob lit la commande 2
+GET http://localhost:3000/api/commandes/2
+
+### 15. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 16. Reconnexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 17. La commande 2 est toujours annulable
+GET http://localhost:3000/api/commandes/2
+
+### 18. Historique : 2 commandes, la plus récente en premier
+GET http://localhost:3000/api/commandes
+
+### 19. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion

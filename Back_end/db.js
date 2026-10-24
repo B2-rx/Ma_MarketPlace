@@ -126,7 +126,7 @@ console.log('Base de données prête : tables "utilisateurs", "boutiques", "prod
 
 /* ===== Bloc 4quinquies : créer les tables "commandes" et "commande_lignes" ===== */
 db.exec(`
-  CREATE TABLE IF NOT EXISTS commandes (
+    CREATE TABLE IF NOT EXISTS commandes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     /*
@@ -140,8 +140,14 @@ db.exec(`
     boutique_nom TEXT NOT NULL,
 
     -- ⚠️ Même liste que STATUTS dans constantes.js
-    statut TEXT NOT NULL DEFAULT 'en_preparation'
-      CHECK (statut IN ('en_preparation', 'prete', 'en_livraison', 'terminee', 'annulee')),
+    statut TEXT NOT NULL DEFAULT 'en_attente'
+      CHECK (statut IN (
+        'en_attente', 'en_preparation', 'prete', 'en_livraison',
+        'terminee', 'annulee', 'refusee'
+      )),
+
+    -- Qui a annulé (NULL tant que la commande n'est pas annulée)
+    annule_par TEXT CHECK (annule_par IN ('client', 'commercant')),
 
     -- Total en nombre ENTIER (460 = 4.60), calculé par le serveur
     total_entier INTEGER NOT NULL CHECK (total_entier >= 0),
@@ -149,6 +155,7 @@ db.exec(`
     date_creation TEXT NOT NULL DEFAULT (datetime('now')),
     date_mise_a_jour TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
 
   CREATE TABLE IF NOT EXISTS commande_lignes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -7,8 +7,10 @@ const { exigerRole } = require('../middlewares/auth');
 const {
   FACTEUR,
   STATUT_INITIAL,
+  STATUT_ANNULE,
   LIBELLES_STATUTS,
-  STATUT_ANNULE
+  STATUTS_ANNULABLES_CLIENT,
+  ANNULE_PAR_CLIENT
 } = require('../constantes');
 
 
@@ -33,13 +35,6 @@ const limiteurCommande = rateLimit({
 
 // 🔧 À MODIFIER : nombre maximum de commandes renvoyées dans l'historique
 const LIMITE_HISTORIQUE = 50;
-
-/*
-  Le client ne peut annuler que tant que la commande est dans ce statut.
-  Une fois prête, le commerçant a déjà travaillé.
-*/
-const STATUT_ANNULABLE = STATUT_INITIAL;
-
 
 
 /* ===== Bloc 3 : requêtes SQL préparées ===== */
@@ -78,15 +73,16 @@ const viderPanier = db.prepare(`
 
 // Double condition : l'id de la commande ET son propriétaire
 const lireCommande = db.prepare(`
-  SELECT id, boutique_id, boutique_nom, statut, total_entier,
+  SELECT id, boutique_id, boutique_nom, statut, annule_par, total_entier,
          date_creation, date_mise_a_jour
   FROM commandes
   WHERE id = ? AND utilisateur_id = ?
 `);
 
+
 // Historique d'un client : les plus récentes d'abord
 const listerCommandes = db.prepare(`
-  SELECT id, boutique_id, boutique_nom, statut, total_entier,
+  SELECT id, boutique_id, boutique_nom, statut, annule_par, total_entier,
          date_creation, date_mise_a_jour
   FROM commandes
   WHERE utilisateur_id = ?
@@ -95,16 +91,24 @@ const listerCommandes = db.prepare(`
 `);
 
 /*
-  Annulation : trois conditions dans la MÊME requête.
+  Un "?" par statut annulable. Cette liste vient d'une constante du code,
+  jamais d'une donnée envoyée par l'utilisateur : il n'y a aucun risque.
+*/
+const marqueursAnnulables = STATUTS_ANNULABLES_CLIENT.map(() => '?').join(', ');
+
+/*
+  Annulation : quatre conditions dans la MÊME requête.
     1) la bonne commande,
     2) qui appartient à ce client,
-    3) et qui est encore annulable.
-  Si le statut a changé entre-temps, aucune ligne n'est modifiée.
+    3) et qui est encore dans un statut annulable.
+  Si le statut a changé entre-temps (le commerçant a fait avancer la commande),
+  aucune ligne n'est modifiée : une seule des deux actions peut gagner.
 */
+
 const annulerCommande = db.prepare(`
   UPDATE commandes
-  SET statut = ?, date_mise_a_jour = datetime('now')
-  WHERE id = ? AND utilisateur_id = ? AND statut = ?
+  SET statut = ?, annule_par = ?, date_mise_a_jour = datetime('now')
+  WHERE id = ? AND utilisateur_id = ? AND statut IN (${marqueursAnnulables})
 `);
 
 
@@ -121,10 +125,6 @@ const lireLignes = db.prepare(`
 
 /* ===== Bloc 4 : outils ===== */
 
-/*
-  Transforme une commande de la base en réponse lisible.
-  Les calculs restent en ENTIERS (150), la conversion (1.5) vient à la fin.
-*/
 // Résumé d'une commande (sans ses lignes), utilisé par l'historique
 function formaterResume(commande) {
   return {
@@ -132,6 +132,16 @@ function formaterResume(commande) {
     boutique: { id: commande.boutique_id, nom: commande.boutique_nom },
     statut: commande.statut,
     statutLibelle: LIBELLES_STATUTS[commande.statut],
+
+    /*
+      Le frontend grise le bouton "Annuler" quand c'est false et affiche
+      "Vous ne pouvez plus annuler cette commande". Il ne connaît pas les règles.
+    */
+    annulable: STATUTS_ANNULABLES_CLIENT.includes(commande.statut),
+
+    // "client" ou "commercant" si la commande est annulée, sinon null
+    annulePar: commande.annule_par,
+
     total: commande.total_entier / FACTEUR,
 
     // Format SQLite : "2026-10-24 12:30:00", en heure UTC
@@ -139,6 +149,8 @@ function formaterResume(commande) {
     dateMiseAJour: commande.date_mise_a_jour
   };
 }
+
+
 /*
   Commande complète : le résumé + ses lignes.
   Les calculs restent en ENTIERS (150), la conversion (1.5) vient à la fin.
@@ -319,7 +331,14 @@ router.post('/:id/annuler', (req, res) => {
 
   const utilisateurId = req.session.utilisateurId;
 
-  const resultat = annulerCommande.run(STATUT_ANNULE, id, utilisateurId, STATUT_ANNULABLE);
+  const resultat = annulerCommande.run(
+    STATUT_ANNULE,
+    ANNULE_PAR_CLIENT,
+    id,
+    utilisateurId,
+    ...STATUTS_ANNULABLES_CLIENT
+  );
+
 
   /*
     changes = 0 : rien n'a été modifié. Deux causes possibles :
@@ -333,13 +352,15 @@ router.post('/:id/annuler', (req, res) => {
       return res.status(404).json({ erreurs: ['Commande introuvable.'] });
     }
 
+    
     return res.status(409).json({
       erreurs: [
-        'Cette commande ne peut plus être annulée '
+        'Vous ne pouvez plus annuler cette commande.'
         + `(statut : ${LIBELLES_STATUTS[commande.statut]}).`
       ]
     });
   }
+  
 
   const commande = lireCommande.get(id, utilisateurId);
 
@@ -353,5 +374,6 @@ router.post('/:id/annuler', (req, res) => {
 
 /* ===== Bloc 8 : partager le router ===== */
 module.exports = router;
+
 
 
