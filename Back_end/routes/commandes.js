@@ -3,7 +3,15 @@ const express = require('express');
 const { rateLimit } = require('express-rate-limit');
 const db = require('../db');
 const { exigerRole } = require('../middlewares/auth');
-const { FACTEUR, STATUT_INITIAL } = require('../constantes');
+
+const {
+  FACTEUR,
+  STATUT_INITIAL,
+  LIBELLES_STATUTS,
+  STATUT_ANNULE
+} = require('../constantes');
+
+
 
 const router = express.Router();
 
@@ -22,6 +30,16 @@ const limiteurCommande = rateLimit({
   legacyHeaders: false,
   message: { erreurs: ['Trop de commandes. Réessaie plus tard.'] }
 });
+
+// 🔧 À MODIFIER : nombre maximum de commandes renvoyées dans l'historique
+const LIMITE_HISTORIQUE = 50;
+
+/*
+  Le client ne peut annuler que tant que la commande est dans ce statut.
+  Une fois prête, le commerçant a déjà travaillé.
+*/
+const STATUT_ANNULABLE = STATUT_INITIAL;
+
 
 
 /* ===== Bloc 3 : requêtes SQL préparées ===== */
@@ -56,12 +74,42 @@ const viderPanier = db.prepare(`
   DELETE FROM panier_lignes WHERE utilisateur_id = ?
 `);
 
+// -----------
+
 // Double condition : l'id de la commande ET son propriétaire
 const lireCommande = db.prepare(`
-  SELECT id, boutique_id, boutique_nom, statut, total_entier, date_creation
+  SELECT id, boutique_id, boutique_nom, statut, total_entier,
+         date_creation, date_mise_a_jour
   FROM commandes
   WHERE id = ? AND utilisateur_id = ?
 `);
+
+// Historique d'un client : les plus récentes d'abord
+const listerCommandes = db.prepare(`
+  SELECT id, boutique_id, boutique_nom, statut, total_entier,
+         date_creation, date_mise_a_jour
+  FROM commandes
+  WHERE utilisateur_id = ?
+  ORDER BY id DESC
+  LIMIT ?
+`);
+
+/*
+  Annulation : trois conditions dans la MÊME requête.
+    1) la bonne commande,
+    2) qui appartient à ce client,
+    3) et qui est encore annulable.
+  Si le statut a changé entre-temps, aucune ligne n'est modifiée.
+*/
+const annulerCommande = db.prepare(`
+  UPDATE commandes
+  SET statut = ?, date_mise_a_jour = datetime('now')
+  WHERE id = ? AND utilisateur_id = ? AND statut = ?
+`);
+
+
+// ------------
+
 
 const lireLignes = db.prepare(`
   SELECT produit_id, nom, prix_unitaire_entier, quantite
@@ -77,15 +125,27 @@ const lireLignes = db.prepare(`
   Transforme une commande de la base en réponse lisible.
   Les calculs restent en ENTIERS (150), la conversion (1.5) vient à la fin.
 */
-function formaterCommande(commande, lignes) {
+// Résumé d'une commande (sans ses lignes), utilisé par l'historique
+function formaterResume(commande) {
   return {
     id: commande.id,
     boutique: { id: commande.boutique_id, nom: commande.boutique_nom },
     statut: commande.statut,
+    statutLibelle: LIBELLES_STATUTS[commande.statut],
     total: commande.total_entier / FACTEUR,
 
     // Format SQLite : "2026-10-24 12:30:00", en heure UTC
     dateCreation: commande.date_creation,
+    dateMiseAJour: commande.date_mise_a_jour
+  };
+}
+/*
+  Commande complète : le résumé + ses lignes.
+  Les calculs restent en ENTIERS (150), la conversion (1.5) vient à la fin.
+*/
+function formaterCommande(commande, lignes) {
+  return {
+    ...formaterResume(commande),
 
     lignes: lignes.map((ligne) => ({
       produitId: ligne.produit_id,
@@ -96,6 +156,13 @@ function formaterCommande(commande, lignes) {
     }))
   };
 }
+// Lit l'identifiant dans l'adresse. Renvoie null s'il est invalide.
+function lireId(req) {
+  const id = Number(req.params.id);
+
+  return Number.isInteger(id) && id > 0 ? id : null;
+}
+
 
 
 /* ===== Bloc 5 : la transaction ===== */
@@ -179,6 +246,8 @@ const passerCommande = db.transaction((utilisateurId) => {
 router.use(exigerRole('client'));
 
 
+
+
 /* ===== Bloc 7 : POST / (passer commande) ===== */
 
 /*
@@ -208,5 +277,81 @@ router.post('/', limiteurCommande, (req, res) => {
 });
 
 
+/* ===== Bloc 7bis : GET / (historique du client) ===== */
+router.get('/', (req, res) => {
+  const commandes = listerCommandes.all(req.session.utilisateurId, LIMITE_HISTORIQUE);
+
+  return res.json({ commandes: commandes.map(formaterResume) });
+});
+
+
+/* ===== Bloc 7ter : GET /:id (détail et suivi du statut) ===== */
+
+/*
+  Le frontend rappellera cette route à chaque clic sur « Rafraîchir ».
+  On répond 404 (et non 403) quand la commande appartient à quelqu'un d'autre :
+  on ne révèle pas qu'elle existe.
+*/
+router.get('/:id', (req, res) => {
+  const id = lireId(req);
+
+  if (id === null) {
+    return res.status(404).json({ erreurs: ['Commande introuvable.'] });
+  }
+
+  const commande = lireCommande.get(id, req.session.utilisateurId);
+
+  if (!commande) {
+    return res.status(404).json({ erreurs: ['Commande introuvable.'] });
+  }
+
+  return res.json({ commande: formaterCommande(commande, lireLignes.all(id)) });
+});
+
+
+/* ===== Bloc 7quater : POST /:id/annuler (annulation par le client) ===== */
+router.post('/:id/annuler', (req, res) => {
+  const id = lireId(req);
+
+  if (id === null) {
+    return res.status(404).json({ erreurs: ['Commande introuvable.'] });
+  }
+
+  const utilisateurId = req.session.utilisateurId;
+
+  const resultat = annulerCommande.run(STATUT_ANNULE, id, utilisateurId, STATUT_ANNULABLE);
+
+  /*
+    changes = 0 : rien n'a été modifié. Deux causes possibles :
+      - la commande n'existe pas pour CE client  -> 404
+      - elle existe, mais n'est plus annulable   -> 409 (conflit avec son état)
+  */
+  if (resultat.changes === 0) {
+    const commande = lireCommande.get(id, utilisateurId);
+
+    if (!commande) {
+      return res.status(404).json({ erreurs: ['Commande introuvable.'] });
+    }
+
+    return res.status(409).json({
+      erreurs: [
+        'Cette commande ne peut plus être annulée '
+        + `(statut : ${LIBELLES_STATUTS[commande.statut]}).`
+      ]
+    });
+  }
+
+  const commande = lireCommande.get(id, utilisateurId);
+
+  return res.json({
+    message: 'Commande annulée.',
+    commande: formaterCommande(commande, lireLignes.all(id))
+  });
+});
+
+
+
 /* ===== Bloc 8 : partager le router ===== */
 module.exports = router;
+
+

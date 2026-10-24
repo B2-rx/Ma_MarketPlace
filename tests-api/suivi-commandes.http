@@ -1,0 +1,77 @@
+### 1. Sans être connecté
+GET http://localhost:3000/api/commandes
+
+### 2. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 3. Historique d'Alice
+GET http://localhost:3000/api/commandes
+
+### 4. Détail de la commande 1 (adapte l'id à celui vu en 3)
+GET http://localhost:3000/api/commandes/1
+
+### 5. Commande inexistante
+GET http://localhost:3000/api/commandes/9999
+
+### 6. Identifiant absurde
+GET http://localhost:3000/api/commandes/abc
+
+### 7. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 8. Connexion de Bob (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "bob@example.com", "motDePasse": "Bobpass2026" }
+
+### 9. Historique de Bob : vide
+GET http://localhost:3000/api/commandes
+
+### 10. TEST CLÉ : Bob lit la commande 1 d'Alice
+GET http://localhost:3000/api/commandes/1
+
+### 11. TEST CLÉ : Bob tente d'annuler la commande 1 d'Alice
+POST http://localhost:3000/api/commandes/1/annuler
+
+### 12. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 13. Reconnexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 14. Vider le panier
+DELETE http://localhost:3000/api/panier
+
+### 15. Ajouter 1 croissant (produit 3)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }
+
+### 16. Passer commande (note l'id de la nouvelle commande, 2 chez toi)
+POST http://localhost:3000/api/commandes
+
+### 17. Suivi de la nouvelle commande
+GET http://localhost:3000/api/commandes/2
+
+### 18. L'annuler
+POST http://localhost:3000/api/commandes/2/annuler
+
+### 19. L'annuler une seconde fois
+POST http://localhost:3000/api/commandes/2/annuler
+
+### 20. Suivi : statut annulée
+GET http://localhost:3000/api/commandes/2
+
+### 21. Historique : 2 commandes, la plus récente en premier
+GET http://localhost:3000/api/commandes
+
+### 22. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion

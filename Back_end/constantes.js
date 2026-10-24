@@ -23,6 +23,30 @@ const STATUTS = ['en_preparation', 'prete', 'en_livraison', 'terminee', 'annulee
 const STATUT_INITIAL = STATUTS[0];
 
 
-module.exports = { SECTEURS, DECIMALES, FACTEUR, STATUTS, STATUT_INITIAL };
+/*
+  Libellés lisibles des statuts, pour l'affichage.
+  Le frontend n'aura pas à les réécrire : le serveur les envoie.
+*/
+const LIBELLES_STATUTS = {
+  en_preparation: 'En préparation',
+  prete: 'Prête à être livrée',
+  en_livraison: 'En livraison',
+  terminee: 'Terminée',
+  annulee: 'Annulée'
+};
+
+// Statut d'une commande annulée (définitif)
+const STATUT_ANNULE = 'annulee';
+
+
+module.exports = {
+  SECTEURS,
+  DECIMALES,
+  FACTEUR,
+  STATUTS,
+  STATUT_INITIAL,
+  LIBELLES_STATUTS,
+  STATUT_ANNULE
+};
 
 
