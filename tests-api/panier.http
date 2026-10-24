@@ -89,3 +89,112 @@ POST http://localhost:3000/api/panier/lignes
 Content-Type: application/json
 
 { "produitId": 3, "quantite": 1 }
+
+
+
+### ===== ÉTAPE 17 =====
+
+### 1. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 2. Vider le panier (point de départ propre)
+DELETE http://localhost:3000/api/panier
+
+### 3. Consulter un panier vide
+GET http://localhost:3000/api/panier
+
+### 4. Ajouter 2 croissants (produit 3)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 2 }
+
+### 5. Ajouter 1 pain au chocolat (produit 4)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 4, "quantite": 1 }
+
+### 6. Consulter : total attendu 4.6
+GET http://localhost:3000/api/panier
+
+### 7. Passer les croissants à 4
+PUT http://localhost:3000/api/panier/lignes/3
+Content-Type: application/json
+
+{ "quantite": 4 }
+
+### 8. Quantité 0 (refusée)
+PUT http://localhost:3000/api/panier/lignes/3
+Content-Type: application/json
+
+{ "quantite": 0 }
+
+### 9. Quantité 21 (refusée)
+PUT http://localhost:3000/api/panier/lignes/3
+Content-Type: application/json
+
+{ "quantite": 21 }
+
+### 10. Produit existant mais absent de MON panier (produit 5)
+PUT http://localhost:3000/api/panier/lignes/5
+Content-Type: application/json
+
+{ "quantite": 1 }
+
+### 11. Identifiant absurde
+DELETE http://localhost:3000/api/panier/lignes/abc
+
+### 12. Retirer le pain au chocolat
+DELETE http://localhost:3000/api/panier/lignes/4
+
+### 13. Le retirer une seconde fois
+DELETE http://localhost:3000/api/panier/lignes/4
+
+### 14. Consulter : total attendu 6
+GET http://localhost:3000/api/panier
+
+### 15. Conflit : ajouter le miel (adapte l'id, 7 chez toi)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 7, "quantite": 1 }
+
+### 16. Vider le panier pour résoudre le conflit
+DELETE http://localhost:3000/api/panier
+
+### 17. Réessayer l'ajout du miel
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 7, "quantite": 1 }
+
+### 18. Consulter : boutique « Épicerie Fine », total 5.5
+GET http://localhost:3000/api/panier
+
+### 19. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 20. Inscription de Bob (409 si le compte existe déjà : sans importance)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{ "email": "bob@example.com", "telephone": "0655443322", "motDePasse": "Bobpass2026", "role": "client" }
+
+### 21. Connexion de Bob
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "bob@example.com", "motDePasse": "Bobpass2026" }
+
+### 22. Panier de Bob : il ne doit PAS voir le miel d'Alice
+GET http://localhost:3000/api/panier
+
+### 23. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 24. Sans être connecté
+GET http://localhost:3000/api/panier
