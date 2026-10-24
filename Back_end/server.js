@@ -116,6 +116,10 @@ app.use('/api/panier', require('./routes/panier'));
 // Branche les commandes du client : accessibles sous /api/commandes/...
 app.use('/api/commandes', require('./routes/commandes'));
 
+// Branche le tableau de bord du commerçant : /api/commercant/commandes/...
+app.use('/api/commercant/commandes', require('./routes/commandes-commercant'));
+
+
 
 // ===== Bloc 6 : une première route =====
 // Une route associe une ADRESSE à une RÉPONSE.
