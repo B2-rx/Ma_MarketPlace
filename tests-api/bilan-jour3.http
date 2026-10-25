@@ -172,8 +172,21 @@ Content-Type: application/json
 ### 29. Consulter : total 4.5
 GET http://localhost:3000/api/panier
 
+
+
 ### 30. Passer commande (id 1, total 4.5)
 POST http://localhost:3000/api/commandes
+
+
+// --------------------le 30 remplacer 
+### 30. Passer commande (id 1, total 4.5)
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "12 rue des Lilas, 75011 Paris" }
+
+//-----------------------------
+
 
 ### 31. Le panier est vide
 GET http://localhost:3000/api/panier
@@ -280,8 +293,23 @@ Content-Type: application/json
 
 { "produitId": 2, "quantite": 1 }
 
+
+
+
 ### 51. Nouvelle commande (id 2)
 POST http://localhost:3000/api/commandes
+
+// ------------- le 51 remplacer 
+### 51. Nouvelle commande (id 2)
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "8 avenue Victor Hugo, 75016 Paris" }
+
+// ----------------------------------
+
+
+
 
 ### 52. L'annuler
 POST http://localhost:3000/api/commandes/2/annuler
