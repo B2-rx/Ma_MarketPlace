@@ -25,3 +25,8 @@ Thumbs.db
 # on ignore les rapports pour l'instant 
 Rapport j-1.docx
 Rapport j-2.docx
+
+
+# ===== Bloc 6 : sauvegardes locales =====
+Back_end/sauvegardes/
+

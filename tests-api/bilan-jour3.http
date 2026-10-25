@@ -1,0 +1,296 @@
+### ===== A. COMPTES =====
+
+### 1. Inscription d'Alice (client)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{ "email": "alice@example.com", "telephone": "+33 6 12 34 56 78", "motDePasse": "Motdepasse1", "role": "client" }
+
+### 2. Inscription de la boulangerie (commerçant)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "telephone": "0698765432", "motDePasse": "Croissant2026", "role": "commercant" }
+
+### 3. Inscription de l'épicerie (commerçant)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "telephone": "0611223344", "motDePasse": "Baguette2026", "role": "commercant" }
+
+### 4. Inscription de Bob (client)
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{ "email": "bob@example.com", "telephone": "0655443322", "motDePasse": "Bobpass2026", "role": "client" }
+
+### 5. Doublon
+POST http://localhost:3000/api/auth/inscription
+Content-Type: application/json
+
+{ "email": "alice@example.com", "telephone": "0612345678", "motDePasse": "Motdepasse1", "role": "client" }
+
+### 6. Mauvais mot de passe
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Faux1234567" }
+
+
+### ===== B. BOUTIQUES ET PRODUITS =====
+
+### 7. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 8. Lire sa boutique avant création
+GET http://localhost:3000/api/boutiques/ma-boutique
+
+### 9. Créer la boutique
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "Boulangerie du Coin", "description": "Pain frais et viennoiseries.", "secteur": "boulangerie" }
+
+### 10. Boutique invalide
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "", "description": 12345, "secteur": "armes" }
+
+### 11. Envoyer une vraie image
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="boutique.png"
+Content-Type: image/png
+
+< ./images-test/boutique.png
+--LimiteTest--
+
+### 12. Envoyer un faux fichier déguisé en PNG
+POST http://localhost:3000/api/boutiques/ma-boutique/image
+Content-Type: multipart/form-data; boundary=LimiteTest
+
+--LimiteTest
+Content-Disposition: form-data; name="image"; filename="faux.png"
+Content-Type: image/png
+
+< ./images-test/faux.png
+--LimiteTest--
+
+### 13. Ajouter la baguette (id 1)
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Baguette", "description": "Tradition.", "prix": 1.2 }
+
+### 14. Ajouter le croissant (id 2)
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Croissant", "prix": 1.5 }
+
+### 15. Produit invalide (prix à 3 décimales)
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Gâteau", "prix": 1.234 }
+
+### 16. Connexion de l'épicerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "motDePasse": "Baguette2026" }
+
+### 17. Créer la boutique de l'épicerie
+PUT http://localhost:3000/api/boutiques/ma-boutique
+Content-Type: application/json
+
+{ "nom": "Épicerie Fine", "description": "Produits locaux.", "secteur": "epicerie" }
+
+### 18. Ajouter le miel (id 3)
+POST http://localhost:3000/api/produits
+Content-Type: application/json
+
+{ "nom": "Miel de fleurs", "description": "Produit local.", "prix": 5.5 }
+
+### 19. TEST CLÉ : l'épicerie modifie la baguette de la boulangerie
+PUT http://localhost:3000/api/produits/1
+Content-Type: application/json
+
+{ "nom": "Produit piraté", "prix": 0 }
+
+
+### ===== C. CATALOGUE PUBLIC =====
+
+### 20. Déconnexion : on devient un visiteur
+POST http://localhost:3000/api/auth/deconnexion
+
+### 21. Liste des boutiques
+GET http://localhost:3000/api/catalogue/boutiques
+
+### 22. Détail de la boutique 1
+GET http://localhost:3000/api/catalogue/boutiques/1
+
+### 23. Secteur invalide
+GET http://localhost:3000/api/catalogue/boutiques?secteur=armes
+
+### 24. Un visiteur tente d'ouvrir le panier
+GET http://localhost:3000/api/panier
+
+
+### ===== D. PANIER ET COMMANDE (ALICE) =====
+
+### 25. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 26. Ajouter 2 croissants
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 2, "quantite": 2 }
+
+### 27. TEST CLÉ : ajouter le miel d'une autre boutique
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }
+
+### 28. Passer les croissants à 3
+PUT http://localhost:3000/api/panier/lignes/2
+Content-Type: application/json
+
+{ "quantite": 3 }
+
+### 29. Consulter : total 4.5
+GET http://localhost:3000/api/panier
+
+### 30. Passer commande (id 1, total 4.5)
+POST http://localhost:3000/api/commandes
+
+### 31. Le panier est vide
+GET http://localhost:3000/api/panier
+
+### 32. Suivi : en attente, annulable
+GET http://localhost:3000/api/commandes/1
+
+
+### ===== E. LES AUTRES COMPTES NE VOIENT PAS LA COMMANDE =====
+
+### 33. Connexion de Bob
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "bob@example.com", "motDePasse": "Bobpass2026" }
+
+### 34. TEST CLÉ : Bob lit la commande d'Alice
+GET http://localhost:3000/api/commandes/1
+
+### 35. TEST CLÉ : Bob l'annule
+POST http://localhost:3000/api/commandes/1/annuler
+
+### 36. Connexion de l'épicerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "motDePasse": "Baguette2026" }
+
+### 37. TEST CLÉ : l'épicerie lit la commande de la boulangerie
+GET http://localhost:3000/api/commercant/commandes/1
+
+### 38. TEST CLÉ : l'épicerie tente de l'accepter
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+
+### ===== F. TABLEAU DE BORD DE LA BOULANGERIE =====
+
+### 39. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 40. Liste des commandes
+GET http://localhost:3000/api/commercant/commandes
+
+### 41. Saut interdit : en attente vers terminée
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "terminee" }
+
+### 42. Accepter
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+### 43. Prête
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "prete" }
+
+### 44. En livraison
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "en_livraison" }
+
+### 45. Annuler en livraison : interdit
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "annulee" }
+
+### 46. Terminée
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "terminee" }
+
+### 47. Historique : 1 commande terminée, chiffre d'affaires 4.5
+GET http://localhost:3000/api/commercant/commandes/historique
+
+
+### ===== G. ANNULATION PAR LE CLIENT =====
+
+### 48. Reconnexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 49. Annuler la commande terminée : refusé
+POST http://localhost:3000/api/commandes/1/annuler
+
+### 50. Ajouter 1 croissant
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 2, "quantite": 1 }
+
+### 51. Nouvelle commande (id 2)
+POST http://localhost:3000/api/commandes
+
+### 52. L'annuler
+POST http://localhost:3000/api/commandes/2/annuler
+
+### 53. Historique d'Alice : 2 commandes, la plus récente d'abord
+GET http://localhost:3000/api/commandes
+
+### 54. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 55. Qui suis-je ? (doit être refusé)
+GET http://localhost:3000/api/auth/moi

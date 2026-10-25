@@ -2,6 +2,7 @@
 const express = require('express');
 const db = require('../db');
 const { exigerRole } = require('../middlewares/auth');
+const { chargerBoutique } = require('../middlewares/boutique');
 const { DECIMALES, FACTEUR } = require('../constantes');
 const router = express.Router();
 
@@ -15,8 +16,6 @@ const PRIX_MAX = 10000000;
 
 
 // ===== Bloc 3 : requêtes SQL préparées =====
-// Retrouve la boutique du commerçant connecté
-const trouverBoutique = db.prepare(`SELECT id FROM boutiques WHERE utilisateur_id = ?`);
 
 const listerProduits = db.prepare(`
   SELECT id, nom, description, prix_entier, disponible
@@ -108,14 +107,6 @@ function lireId(req) {
 // router.use applique les gardiens à chaque route définie en dessous.
 // 1) exigerRole : seul un commerçant connecté passe.
 // 2) chargerBoutique : retrouve sa boutique, et la met dans req.boutiqueId.
-function chargerBoutique(req, res, next) {
-  const boutique = trouverBoutique.get(req.session.utilisateurId);
-  if (!boutique) {
-    return res.status(404).json({ erreurs: ["Crée d'abord ta boutique."] });
-  }
-  req.boutiqueId = boutique.id;
-  next();
-}
 
 router.use(exigerRole('commercant'), chargerBoutique);
 
