@@ -9,7 +9,8 @@ const {
   LIBELLES_STATUTS,
   STATUT_ANNULE,
   ANNULE_PAR_COMMERCANT,
-  TRANSITIONS_COMMERCANT
+  TRANSITIONS_COMMERCANT , 
+  STATUTS_FINAUX
 } = require('../constantes');
 
 const router = express.Router();
@@ -19,6 +20,11 @@ const router = express.Router();
 
 // 🔧 À MODIFIER : nombre maximum de commandes renvoyées dans la liste
 const LIMITE_LISTE = 100;
+
+// 🔧 À MODIFIER : nombre de commandes par page dans l'historique
+const LIMITE_PAR_DEFAUT = 20;
+const LIMITE_MAX = 50;
+
 
 
 /* ===== Bloc 3 : requêtes SQL préparées ===== */
@@ -67,6 +73,51 @@ const changerStatut = db.prepare(`
   SET statut = ?, annule_par = ?, date_mise_a_jour = datetime('now')
   WHERE id = ? AND boutique_id = ? AND statut = ?
 `);
+
+/*
+  Un "?" par statut final. Cette liste vient d'une constante du code,
+  jamais d'une donnée envoyée par l'utilisateur : il n'y a aucun risque.
+*/
+const marqueursFinaux = STATUTS_FINAUX.map(() => '?').join(', ');
+
+/*
+  Une page de l'historique, de la plus récemment CLÔTURÉE à la plus ancienne.
+  LIMIT = taille de la page, OFFSET = nombre de commandes à sauter.
+  Ordre des "?" : boutique, statuts finaux, filtre (deux fois), limite, décalage.
+*/
+const listerHistorique = db.prepare(`
+  SELECT
+    c.id, c.statut, c.annule_par, c.total_entier,
+    c.date_creation, c.date_mise_a_jour,
+    (SELECT SUM(quantite) FROM commande_lignes WHERE commande_id = c.id) AS nombre_articles
+  FROM commandes c
+  WHERE c.boutique_id = ?
+    AND c.statut IN (${marqueursFinaux})
+    AND (? IS NULL OR c.statut = ?)
+  ORDER BY c.date_mise_a_jour DESC, c.id DESC
+  LIMIT ? OFFSET ?
+`);
+
+// Nombre total de commandes correspondant au filtre (pour calculer les pages)
+const compterHistorique = db.prepare(`
+  SELECT COUNT(*) AS total
+  FROM commandes
+  WHERE boutique_id = ?
+    AND statut IN (${marqueursFinaux})
+    AND (? IS NULL OR statut = ?)
+`);
+
+/*
+  Résumé de TOUT l'historique, indépendant de la page affichée.
+  GROUP BY regroupe les lignes par statut : une ligne de résultat par statut.
+*/
+const resumerHistorique = db.prepare(`
+  SELECT statut, COUNT(*) AS nombre, SUM(total_entier) AS somme
+  FROM commandes
+  WHERE boutique_id = ? AND statut IN (${marqueursFinaux})
+  GROUP BY statut
+`);
+
 
 
 /* ===== Bloc 4 : outils ===== */
@@ -126,6 +177,27 @@ function lireId(req) {
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
+/*
+  Lit un entier positif dans l'adresse (?page=2).
+  Renvoie la valeur par défaut si le paramètre est absent, et null s'il est
+  invalide : texte, décimal, négatif, hors limites, ou répété (?page=1&page=2).
+*/
+function lireEntier(valeur, defaut, min, max) {
+  if (valeur === undefined) {
+    return defaut;
+  }
+
+  if (typeof valeur !== 'string' || !/^\d+$/.test(valeur)) {
+    return null;
+  }
+
+  const nombre = Number(valeur);
+
+  return nombre >= min && nombre <= max ? nombre : null;
+}
+
+
+
 
 /* ===== Bloc 5 : les gardiens de TOUTES les routes de ce fichier ===== */
 
@@ -155,6 +227,69 @@ router.get('/', (req, res) => {
 
   return res.json({ commandes: commandes.map(formaterResume) });
 });
+
+/* ===== Bloc 6bis : GET /historique (commandes clôturées) ===== */
+
+/*
+  ⚠️ Cette route DOIT être déclarée AVANT "/:id". Sinon Express lirait
+  "historique" comme un identifiant de commande et répondrait 404.
+
+  Exemples :
+    /api/commercant/commandes/historique
+    /api/commercant/commandes/historique?statut=terminee
+    /api/commercant/commandes/historique?page=2&limite=10
+*/
+router.get('/historique', (req, res) => {
+  const { statut } = req.query;
+  const page = lireEntier(req.query.page, 1, 1, 10000);
+  const limite = lireEntier(req.query.limite, LIMITE_PAR_DEFAUT, 1, LIMITE_MAX);
+
+  if (page === null || limite === null) {
+    return res.status(400).json({
+      erreurs: [`Pagination invalide (page : entier positif, limite : de 1 à ${LIMITE_MAX}).`]
+    });
+  }
+
+  // Le filtre doit être un statut FINAL (refuse aussi ?statut=a&statut=b)
+  if (statut !== undefined && !STATUTS_FINAUX.includes(statut)) {
+    return res.status(400).json({
+      erreurs: [`Statut invalide (choisis parmi : ${STATUTS_FINAUX.join(', ')}).`]
+    });
+  }
+
+  const filtre = statut === undefined ? null : statut;
+  const decalage = (page - 1) * limite;
+
+  const commandes = listerHistorique.all(
+    req.boutiqueId, ...STATUTS_FINAUX, filtre, filtre, limite, decalage
+  );
+
+  const { total } = compterHistorique.get(req.boutiqueId, ...STATUTS_FINAUX, filtre, filtre);
+
+  // Résumé : on part de zéros, puis on remplit avec ce que la base renvoie
+  const resume = {
+    terminees: { nombre: 0, chiffreAffaires: 0 },
+    annulees: { nombre: 0 },
+    refusees: { nombre: 0 }
+  };
+
+  resumerHistorique.all(req.boutiqueId, ...STATUTS_FINAUX).forEach((ligne) => {
+    if (ligne.statut === 'terminee') {
+      resume.terminees = { nombre: ligne.nombre, chiffreAffaires: ligne.somme / FACTEUR };
+    } else if (ligne.statut === 'annulee') {
+      resume.annulees = { nombre: ligne.nombre };
+    } else if (ligne.statut === 'refusee') {
+      resume.refusees = { nombre: ligne.nombre };
+    }
+  });
+
+  return res.json({
+    resume,
+    pagination: { page, limite, total, pages: Math.ceil(total / limite) },
+    commandes: commandes.map(formaterResume)
+  });
+});
+
 
 
 /* ===== Bloc 7 : GET /:id (détail d'une commande) ===== */
