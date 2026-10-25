@@ -139,6 +139,14 @@ db.exec(`
     -- Copie du nom de la boutique à l'instant de la commande
     boutique_nom TEXT NOT NULL,
 
+    /*
+      COPIE de l'adresse saisie à la commande : elle ne bougera plus.
+      ⚠️ Mêmes bornes que ADRESSE_MIN et ADRESSE_MAX dans constantes.js.
+    */
+    adresse_livraison TEXT NOT NULL
+      CHECK (length(adresse_livraison) BETWEEN 10 AND 200),
+  
+      
     -- ⚠️ Même liste que STATUTS dans constantes.js
     statut TEXT NOT NULL DEFAULT 'en_attente'
       CHECK (statut IN (
