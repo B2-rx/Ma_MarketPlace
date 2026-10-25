@@ -1,0 +1,114 @@
+### ===== A. ACCÈS REFUSÉ =====
+
+### 1. Sans être connecté
+GET http://localhost:3000/api/commercant/commandes/historique
+
+### 2. Connexion d'Alice (client)
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 3. Un client tente l'historique commerçant
+GET http://localhost:3000/api/commercant/commandes/historique
+
+### 4. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== B. ÉPICERIE : elle ne voit rien de la boulangerie =====
+
+### 5. Connexion de l'épicerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "motDePasse": "Baguette2026" }
+
+### 6. TEST CLÉ : historique vide
+GET http://localhost:3000/api/commercant/commandes/historique
+
+### 7. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== C. BOULANGERIE =====
+
+### 8. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 9. Historique complet : 3 commandes
+GET http://localhost:3000/api/commercant/commandes/historique
+
+### 10. Filtre : seulement les terminées
+GET http://localhost:3000/api/commercant/commandes/historique?statut=terminee
+
+### 11. Filtre sur un statut non final
+GET http://localhost:3000/api/commercant/commandes/historique?statut=en_attente
+
+### 12. Page 1, 2 commandes par page
+GET http://localhost:3000/api/commercant/commandes/historique?page=1&limite=2
+
+### 13. Page 2, 2 commandes par page
+GET http://localhost:3000/api/commercant/commandes/historique?page=2&limite=2
+
+### 14. Page inexistante
+GET http://localhost:3000/api/commercant/commandes/historique?page=99
+
+### 15. Limite à 0
+GET http://localhost:3000/api/commercant/commandes/historique?limite=0
+
+### 16. Page en texte
+GET http://localhost:3000/api/commercant/commandes/historique?page=abc
+
+### 17. Limite trop grande
+GET http://localhost:3000/api/commercant/commandes/historique?limite=500
+
+### 18. Non-régression : le détail d'une commande fonctionne toujours
+GET http://localhost:3000/api/commercant/commandes/3
+
+
+### ===== D. UNE COMMANDE EN COURS N'ENTRE PAS DANS L'HISTORIQUE =====
+
+### 19. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 20. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 21. Vider le panier
+DELETE http://localhost:3000/api/panier
+
+### 22. Ajouter 1 croissant (produit 3)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 3, "quantite": 1 }
+
+### 23. Commander (id 5)
+POST http://localhost:3000/api/commandes
+
+### 24. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 25. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 26. Historique : toujours 3 commandes
+GET http://localhost:3000/api/commercant/commandes/historique
+
+### 27. Tableau de bord : la commande 5 est en attente
+GET http://localhost:3000/api/commercant/commandes?statut=en_attente
+
+### 28. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
