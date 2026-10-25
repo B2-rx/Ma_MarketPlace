@@ -89,6 +89,16 @@ const TRANSITIONS_COMMERCANT = {
 };
 
 
+/*
+  Statuts finaux : ceux d'où le commerçant ne peut plus rien faire.
+  On les DÉDUIT du tableau des transitions : si tu modifies une règle,
+  cette liste reste juste sans que tu aies à y penser.
+*/
+const STATUTS_FINAUX = STATUTS.filter(
+  (statut) => TRANSITIONS_COMMERCANT[statut].length === 0
+);
+
+
 module.exports = {
   SECTEURS,
   DECIMALES,
@@ -100,5 +110,6 @@ module.exports = {
   STATUTS_ANNULABLES_CLIENT,
   ANNULE_PAR_CLIENT,
   ANNULE_PAR_COMMERCANT,
-  TRANSITIONS_COMMERCANT
+  TRANSITIONS_COMMERCANT,
+  STATUTS_FINAUX
 };
