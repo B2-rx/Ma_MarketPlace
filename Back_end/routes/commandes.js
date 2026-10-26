@@ -10,9 +10,10 @@ const {
   STATUT_ANNULE,
   LIBELLES_STATUTS,
   STATUTS_ANNULABLES_CLIENT,
-  ANNULE_PAR_CLIENT
+  ANNULE_PAR_CLIENT,
+  ADRESSE_MIN,
+  ADRESSE_MAX
 } = require('../constantes');
-
 
 
 const router = express.Router();
@@ -37,6 +38,7 @@ const limiteurCommande = rateLimit({
 const LIMITE_HISTORIQUE = 50;
 
 
+
 /* ===== Bloc 3 : requêtes SQL préparées ===== */
 
 /*
@@ -56,8 +58,8 @@ const lirePanier = db.prepare(`
 `);
 
 const insererCommande = db.prepare(`
-  INSERT INTO commandes (utilisateur_id, boutique_id, boutique_nom, statut, total_entier)
-  VALUES (?, ?, ?, ?, ?)
+  INSERT INTO commandes (utilisateur_id, boutique_id, boutique_nom, statut, total_entier, adresse_livraison)
+  VALUES (?, ?, ?, ?, ?, ?)
 `);
 
 const insererLigne = db.prepare(`
@@ -74,7 +76,7 @@ const viderPanier = db.prepare(`
 // Double condition : l'id de la commande ET son propriétaire
 const lireCommande = db.prepare(`
   SELECT id, boutique_id, boutique_nom, statut, annule_par, total_entier,
-         date_creation, date_mise_a_jour
+         adresse_livraison, date_creation, date_mise_a_jour
   FROM commandes
   WHERE id = ? AND utilisateur_id = ?
 `);
@@ -125,6 +127,35 @@ const lireLignes = db.prepare(`
 
 /* ===== Bloc 4 : outils ===== */
 
+/*
+  Valide et nettoie l'adresse saisie.
+  Renvoie l'adresse nettoyée, ou null si elle est invalide.
+*/
+function nettoyerAdresse(valeur) {
+  // Refuse tout ce qui n'est pas du texte (nombre, objet, tableau...)
+  if (typeof valeur !== 'string') {
+    return null;
+  }
+
+  /*
+    Retours à la ligne, tabulations et espaces multiples deviennent
+    UN seul espace : "12 rue X\n75011 Paris" devient "12 rue X 75011 Paris".
+  */
+  const adresse = valeur.replace(/\s+/g, ' ').trim();
+
+  if (adresse.length < ADRESSE_MIN || adresse.length > ADRESSE_MAX) {
+    return null;
+  }
+
+  // Il ne doit rester aucun caractère de contrôle (cloche, caractère nul...)
+  if (/[\u0000-\u001F\u007F]/.test(adresse)) {
+    return null;
+  }
+
+  return adresse;
+}
+
+
 // Résumé d'une commande (sans ses lignes), utilisé par l'historique
 function formaterResume(commande) {
   return {
@@ -159,6 +190,9 @@ function formaterCommande(commande, lignes) {
   return {
     ...formaterResume(commande),
 
+    // visible seulement dans le detail, jamais dans les listes
+    adresseLivraison : commande.adresseLivraison, 
+
     lignes: lignes.map((ligne) => ({
       produitId: ligne.produit_id,
       nom: ligne.nom,
@@ -190,7 +224,7 @@ function lireId(req) {
     { erreurs, statutHttp }  = refus, rien n'a été écrit
     { commandeId }           = commande créée
 */
-const passerCommande = db.transaction((utilisateurId) => {
+const passerCommande = db.transaction((utilisateurId, adresse) => {
   const lignes = lirePanier.all(utilisateurId);
 
   // Panier vide
@@ -235,7 +269,8 @@ const passerCommande = db.transaction((utilisateurId) => {
     lignes[0].boutique_id,
     lignes[0].boutique_nom,
     STATUT_INITIAL,
-    totalEntier
+    totalEntier, 
+    adresse
   );
 
   const commandeId = resultat.lastInsertRowid;
@@ -258,18 +293,29 @@ const passerCommande = db.transaction((utilisateurId) => {
 router.use(exigerRole('client'));
 
 
-
-
 /* ===== Bloc 7 : POST / (passer commande) ===== */
 
 /*
-  Aucun corps attendu : tout vient du panier enregistré côté serveur.
-  Le limiteur passe AVANT la fonction, comme un gardien.
+  Corps attendu : { "adresseLivraison": "12 rue des Lilas, 75011 Paris" }
+  Le prix et le total ne sont pas acceptés : tout vient du panier côté serveur.
+  La validation se fait AVANT la transaction : une adresse invalide
+  ne touche ni au panier, ni à la base.
 */
 router.post('/', limiteurCommande, (req, res) => {
   const utilisateurId = req.session.utilisateurId;
 
-  const resultat = passerCommande(utilisateurId);
+  const adresse = nettoyerAdresse((req.body || {}).adresseLivraison);
+
+  if (adresse === null) {
+    return res.status(400).json({
+      erreurs: [
+        `Adresse de livraison invalide (${ADRESSE_MIN} à ${ADRESSE_MAX} caractères, `
+        + 'sans caractère de contrôle).'
+      ]
+    });
+  }
+
+  const resultat = passerCommande(utilisateurId, adresse);
 
   // Refus : on renvoie le code et le corps préparés dans la transaction
   if (resultat.erreurs) {
@@ -287,6 +333,7 @@ router.post('/', limiteurCommande, (req, res) => {
     commande: formaterCommande(commande, lignes)
   });
 });
+
 
 
 /* ===== Bloc 7bis : GET / (historique du client) ===== */

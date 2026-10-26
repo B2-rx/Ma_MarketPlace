@@ -99,6 +99,16 @@ const STATUTS_FINAUX = STATUTS.filter(
 );
 
 
+/* ===== Adresse de livraison ===== */
+
+/*
+  Longueur de l'adresse saisie à la commande.
+  ⚠️ Ces bornes doivent rester identiques au CHECK de "adresse_livraison" (db.js).
+*/
+const ADRESSE_MIN = 10;
+const ADRESSE_MAX = 200;
+
+
 module.exports = {
   SECTEURS,
   DECIMALES,
@@ -111,5 +121,7 @@ module.exports = {
   ANNULE_PAR_CLIENT,
   ANNULE_PAR_COMMERCANT,
   TRANSITIONS_COMMERCANT,
-  STATUTS_FINAUX
+  STATUTS_FINAUX,
+  ADRESSE_MIN,
+  ADRESSE_MAX
 };

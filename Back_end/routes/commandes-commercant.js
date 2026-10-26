@@ -49,6 +49,7 @@ const lireCommande = db.prepare(`
   SELECT
     c.id, c.statut, c.annule_par, c.total_entier,
     c.date_creation, c.date_mise_a_jour,
+    c.adresse_livraison,
     u.telephone AS client_telephone,
     (SELECT SUM(quantite) FROM commande_lignes WHERE commande_id = c.id) AS nombre_articles
   FROM commandes c
@@ -159,6 +160,10 @@ function formaterDetail(commande, lignes) {
 
     // Pour joindre le client. L'email n'est JAMAIS communiqué.
     client: { telephone: commande.client_telephone },
+
+    // Où livrer. Visible seulement ici (détail), jamais dans la liste ni l'historique
+    adresseLivraison: commande.adresse_livraison,
+
 
     lignes: lignes.map((ligne) => ({
       produitId: ligne.produit_id,

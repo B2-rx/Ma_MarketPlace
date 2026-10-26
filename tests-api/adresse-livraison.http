@@ -1,0 +1,124 @@
+### ===== A. ALICE : adresses refusées =====
+
+### 1. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 2. Vider le panier
+DELETE http://localhost:3000/api/panier
+
+### 3. Panier vide, adresse valide
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "12 rue des Lilas, 75011 Paris" }
+
+### 4. Ajouter 1 croissant (produit 2)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 2, "quantite": 1 }
+
+### 5. Sans adresse
+POST http://localhost:3000/api/commandes
+
+### 6. Adresse trop courte
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "Rue 1" }
+
+### 7. Adresse qui n'est pas du texte
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": 1234567890123 }
+
+### 8. Adresse trop longue (6 x 36 = 216 caractères, générés par REST Client)
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "{{$guid}}{{$guid}}{{$guid}}{{$guid}}{{$guid}}{{$guid}}" }
+
+### 9. Caractère de contrôle caché (\u0007)
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "Rue des Lilas\u0007 12 Paris" }
+
+### 10. Le panier est INTACT malgré les refus
+GET http://localhost:3000/api/panier
+
+
+### ===== B. ALICE : adresse valide =====
+
+### 11. Commander (retour à la ligne et espaces en trop)
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "  12 rue des Lilas\n75011   Paris  " }
+
+### 12. Le panier est vide
+GET http://localhost:3000/api/panier
+
+### 13. Détail : l'adresse est présente
+GET http://localhost:3000/api/commandes/1
+
+### 14. Historique : AUCUNE adresse dans la liste
+GET http://localhost:3000/api/commandes
+
+### 15. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== C. BOB ET L'ÉPICERIE : pas d'accès =====
+
+### 16. Connexion de Bob
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "bob@example.com", "motDePasse": "Bobpass2026" }
+
+### 17. TEST CLÉ : Bob lit la commande d'Alice
+GET http://localhost:3000/api/commandes/1
+
+### 18. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+### 19. Connexion de l'épicerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "epicerie@example.com", "motDePasse": "Baguette2026" }
+
+### 20. TEST CLÉ : l'épicerie lit la commande de la boulangerie
+GET http://localhost:3000/api/commercant/commandes/1
+
+### 21. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+### ===== D. BOULANGERIE : voit l'adresse là où il faut =====
+
+### 22. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 23. Liste : AUCUNE adresse
+GET http://localhost:3000/api/commercant/commandes
+
+### 24. Détail : adresse + téléphone du client
+GET http://localhost:3000/api/commercant/commandes/1
+
+### 25. Accepter : la réponse contient l'adresse
+PATCH http://localhost:3000/api/commercant/commandes/1/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+### 26. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
