@@ -114,9 +114,9 @@ function validerInscription(donnees) {
   // 🔧 À MODIFIER : adapte cette règle à ton pays si besoin.
   if (
     typeof telephone !== 'string' ||
-    !/^\+?[0-9 .-]{8,20}$/.test(telephone.trim())
+    !/^\+?[0-9 .-]{8,25}$/.test(telephone.trim())
   ) {
-    erreurs.push('Téléphone invalide (8 à 20 chiffres, "+" autorisé au début).');
+    erreurs.push('Téléphone invalide (8 à 25 chiffres, "+" autorisé au début).');
   }
 
   // Mot de passe : 8 caractères minimum, au moins une lettre et un chiffre.
