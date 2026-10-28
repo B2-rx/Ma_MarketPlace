@@ -82,23 +82,25 @@ Content-Type: image/png
 < ./images-test/faux.png
 --LimiteTest--
 
+
 ### 13. Ajouter la baguette (id 1)
 POST http://localhost:3000/api/produits
 Content-Type: application/json
 
-{ "nom": "Baguette", "description": "Tradition.", "prix": 1.2 }
+{ "nom": "Baguette", "description": "Tradition.", "prix": 150 }
 
 ### 14. Ajouter le croissant (id 2)
 POST http://localhost:3000/api/produits
 Content-Type: application/json
 
-{ "nom": "Croissant", "prix": 1.5 }
+{ "nom": "Croissant", "prix": 300 }
 
-### 15. Produit invalide (prix à 3 décimales)
+### 15. Produit invalide (prix à virgule)
 POST http://localhost:3000/api/produits
 Content-Type: application/json
 
-{ "nom": "Gâteau", "prix": 1.234 }
+{ "nom": "Gâteau", "prix": 150.5 }
+
 
 ### 16. Connexion de l'épicerie
 POST http://localhost:3000/api/auth/connexion
@@ -112,11 +114,15 @@ Content-Type: application/json
 
 { "nom": "Épicerie Fine", "description": "Produits locaux.", "secteur": "epicerie" }
 
+
 ### 18. Ajouter le miel (id 3)
 POST http://localhost:3000/api/produits
 Content-Type: application/json
 
-{ "nom": "Miel de fleurs", "description": "Produit local.", "prix": 5.5 }
+{ "nom": "Miel de fleurs", "description": "Produit local.", "prix": 2500 }
+
+
+
 
 ### 19. TEST CLÉ : l'épicerie modifie la baguette de la boulangerie
 PUT http://localhost:3000/api/produits/1
@@ -172,10 +178,6 @@ Content-Type: application/json
 ### 29. Consulter : total 4.5
 GET http://localhost:3000/api/panier
 
-
-
-### 30. Passer commande (id 1, total 4.5)
-POST http://localhost:3000/api/commandes
 
 
 // --------------------le 30 remplacer 
@@ -294,10 +296,6 @@ Content-Type: application/json
 { "produitId": 2, "quantite": 1 }
 
 
-
-
-### 51. Nouvelle commande (id 2)
-POST http://localhost:3000/api/commandes
 
 // ------------- le 51 remplacer 
 ### 51. Nouvelle commande (id 2)

@@ -7,12 +7,13 @@
 const SECTEURS = ['restauration', 'boulangerie', 'epicerie', 'boissons', 'autre'];
 
 /*
-  Nombre de décimales de la monnaie : 2 pour l'euro (1.50).
+  Nombre de décimales de la monnaie : 0 pour le franc CFA (300 FCFA),
+  2 pour l'euro (1.50).
   ⚠️ Ne le change plus une fois des produits enregistrés : les prix sont
-  stockés en nombres entiers (1.50 devient 150).
+  stockés en nombres entiers (avec 2 décimales, 1.50 devient 150).
 */
-const DECIMALES = 2;
-const FACTEUR = 10 ** DECIMALES;   // 100 pour 2 décimales
+const DECIMALES = 0;
+const FACTEUR = 10 ** DECIMALES;   // 1 pour 0 décimale, 100 pour 2
 
 
 /* ===== Statuts d'une commande ===== */
