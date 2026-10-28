@@ -10,7 +10,7 @@ const router = express.Router();
 
 // ===== Bloc 2 : réglages =====
 
-// 🔧 À MODIFIER : prix maximum autorisé (dans l'unité normale, ex. en euros)
+// 🔧 À MODIFIER : prix maximum autorisé (dans la monnaie affichee, ici en FCFA)
 const PRIX_MAX = 10000000;
 
 
@@ -64,7 +64,11 @@ function validerProduit(donnees) {
   const { nom, description, prix, disponible } = donnees;
 
   if (typeof nom !== 'string' || nom.trim().length < 2 || nom.trim().length > 80) {
-    erreurs.push('Nom invalide (2 à 80 caractères).');
+    erreurs.push(
+      DECIMALES === 0
+        ? 'Prix invalide (nombre entier positif, en FCFA).'
+        : `Prix invalide (nombre positif, ${DECIMALES} décimale(s) maximum).`
+    );
   }
 
   if (description !== undefined && description !== null) {
