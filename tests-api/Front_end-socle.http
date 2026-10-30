@@ -1,0 +1,32 @@
+### 1. La page d'accueil et ses en-têtes de sécurité
+GET http://localhost:3000/
+
+### 2. La feuille de style
+GET http://localhost:3000/css/style.css
+
+### 3. Le dossier Back_end n'est PAS servi
+GET http://localhost:3000/Back_end/.env
+
+### 4. Remontée de dossier (%2e%2e = "..")
+GET http://localhost:3000/%2e%2e/Back_end/.env
+
+### 5. Les fichiers cachés ne sont jamais servis
+GET http://localhost:3000/.env
+
+### 6. L'API répond toujours
+GET http://localhost:3000/api/sante
+
+### 7. Route d'API inconnue : JSON, pas HTML
+GET http://localhost:3000/api/nimporte-quoi
+
+### 8. Non-régression : connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 9. Non-régression : qui suis-je ?
+GET http://localhost:3000/api/auth/moi
+
+### 10. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
