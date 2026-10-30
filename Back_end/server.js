@@ -9,8 +9,14 @@ const express = require('express');
 
 // Bibliothèque qui gère les sessions (le "badge" de l'utilisateur connecté)
 const session = require('express-session');
+
 // Outil intégré à Node pour fabriquer des chemins de fichiers
 const path = require('path');
+
+
+// En-têtes de sécurité (CSP, protection contre le sniffing, etc.)
+const helmet = require('helmet');
+
 
 // Charge db.js : cela ouvre la base et crée la table au démarrage du serveur
 // 🔧 DÉBOGAGE : si cette ligne provoque une erreur, le problème vient de db.js
@@ -27,6 +33,56 @@ const app = express();
 
 // Ne dit plus "X-Powered-By: Express" dans les réponses
 app.disable('x-powered-by');
+
+// -------------------------- 
+
+/* ===== Sécurité des pages et service du frontend ===== */
+
+/*
+  CSP (Content Security Policy) : liste ce que le navigateur a le droit de charger.
+  "'self'" = uniquement depuis NOTRE site. Aucun script externe, aucun script écrit
+  dans une page, aucun onclick="...". Une donnée piégée affichée par erreur
+  ne pourra donc pas s'exécuter.
+  🔧 DÉBOGAGE : "Refused to ..." dans la console du navigateur (F12) = la CSP bloque
+  quelque chose. Lis le message : il nomme la directive concernée.
+*/
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: false,
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:'],
+      connectSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"]
+    }
+  },
+
+  // 🔧 À MODIFIER au Jour 5 : à activer (true) une fois le site en HTTPS
+  hsts: false
+}));
+
+/*
+  Sert le dossier Front_end : "/" donne index.html, "/css/style.css" donne
+  Front_end/css/style.css. "extensions: ['html']" permet d'écrire "/connexion"
+  pour "/connexion.html".
+  Placé AVANT les sessions : un fichier de style ne déclenche pas de lecture
+  de session. Les fichiers cachés (.env...) ne sont jamais servis.
+*/
+const DOSSIER_FRONT = path.join(__dirname, '..', 'Front_end');
+
+app.use(express.static(DOSSIER_FRONT, { extensions: ['html'] }));
+
+
+
+// -------------------- vient d'arriver 
+
+
+
 
 
 // ===== Bloc 3 : le port =====

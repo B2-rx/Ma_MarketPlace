@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+
+  <!-- Indispensable pour le responsive : sans cette ligne, un téléphone affiche
+       le site comme un écran d'ordinateur réduit -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Ma MarketPlace</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- type="module" : le fichier peut utiliser import. Le script est chargé
+       après la page, et vient de NOTRE site (autorisé par la CSP). -->
+  <script type="module" src="/js/accueil.js"></script>
+</head>
+
+<body>
+  <header class="entete">
+    <span class="marque">Ma MarketPlace</span>
+  </header>
+
+  <main class="conteneur">
+    <section class="carte">
+      <h1>Bienvenue</h1>
+      <p class="discret">Page de contrôle du socle : elle teste le style et le dialogue avec le serveur.</p>
+
+      <div class="ligne ligne-gauche" >
+        <button class="bouton" id="btn-sante" type="button">Tester le serveur</button>
+        <button class="bouton bouton-secondaire" id="btn-moi" type="button">Suis-je connecté ?</button>
+      </div>
+
+      <!-- Zone des messages : remplie par accueil.js, cachée tant qu'elle est vide -->
+      <div id="resultat" class="message" role="status" hidden></div>
+    </section>
+  </main>
+</body>
+</html>
