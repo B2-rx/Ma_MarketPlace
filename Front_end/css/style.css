@@ -490,3 +490,166 @@ a {
 
 
 
+
+/* ===== Ajout au panier ===== */
+
+/* Sur téléphone, les contrôles passent sous le nom du produit */
+.produit {
+  flex-wrap: wrap;
+}
+
+.produit .carte-texte {
+  flex: 1 1 180px;
+}
+
+.commande-produit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.champ.quantite {
+  width: 72px;
+  margin: 0;
+  padding: 0 8px;
+  text-align: center;
+}
+
+
+/* ===== Boîtes de dialogue ===== */
+
+dialog {
+  width: calc(100% - 32px);
+  max-width: 420px;
+  padding: 20px;
+  border: 0;
+  border-radius: var(--rayon);
+  background: var(--carte);
+  color: var(--texte);
+}
+
+dialog::backdrop {
+  background: rgba(27, 36, 32, 0.7);
+}
+
+.dialogue-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+
+/* ===== Page du panier ===== */
+
+.ligne-panier {
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--trait);
+}
+
+.ligne-panier:last-child {
+  border-bottom: 0;
+}
+
+.ligne-panier .carte-texte {
+  flex: 1 1 180px;
+}
+
+.quantite-controle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-quantite {
+  width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--texte);
+  border-radius: 10px;
+  background: var(--carte);
+  color: var(--texte);
+  font: 700 18px system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.btn-quantite:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.quantite-valeur {
+  min-width: 2ch;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Bouton qui a l'allure d'un lien (« Retirer ») */
+.lien-bouton {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--texte);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.total-panier {
+  font-size: 20px;
+}
+
+.badge-alerte {
+  border: 1px solid var(--erreur-bordure);
+  background: var(--erreur-fond);
+  color: var(--erreur-texte);
+}
+
+
+
+/* ===== Boîte de dialogue avec croix de fermeture ===== */
+
+.dialogue-entete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dialogue-entete h2 {
+  margin: 0;
+}
+
+.bouton-fermer {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -8px -8px 0 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--texte);
+  cursor: pointer;
+}
+
+.bouton-fermer:hover {
+  background: var(--trait);
+}
+
+/* Un lien qui a l'allure d'un bouton */
+.bouton-lien {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+
+
+
+
+
+
