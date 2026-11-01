@@ -37,6 +37,8 @@ Content-Type: application/json
 { "email": "alice@example.com", "motDePasse": "Faux1234567" }
 
 
+
+
 ### ===== B. BOUTIQUES ET PRODUITS =====
 
 ### 7. Connexion de la boulangerie
@@ -65,10 +67,10 @@ POST http://localhost:3000/api/boutiques/ma-boutique/image
 Content-Type: multipart/form-data; boundary=LimiteTest
 
 --LimiteTest
-Content-Disposition: form-data; name="image"; filename="boutique.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="image"; filename="boulangerie.webp"
+Content-Type: image/webp
 
-< ./images-test/boutique.png
+< ./images-test/boulangerie.webp
 --LimiteTest--
 
 ### 12. Envoyer un faux fichier déguisé en PNG
@@ -83,23 +85,22 @@ Content-Type: image/png
 --LimiteTest--
 
 
-### 13. Ajouter la baguette (id 1)
+### 13. Ajouter la baguette (id 1) 
 POST http://localhost:3000/api/produits
 Content-Type: application/json
 
 { "nom": "Baguette", "description": "Tradition.", "prix": 150 }
 
-### 14. Ajouter le croissant (id 2)
+### 14. Ajouter le croissant (id 2) 
 POST http://localhost:3000/api/produits
 Content-Type: application/json
 
 { "nom": "Croissant", "prix": 300 }
 
-### 15. Produit invalide (prix à virgule)
-POST http://localhost:3000/api/produits
+### 15. Produit invalide (prix à virgule) POST http://localhost:3000/api/produits
 Content-Type: application/json
 
-{ "nom": "Gâteau", "prix": 150.5 }
+{ "nom": "Gâteau", "prix": 150.5}
 
 
 ### 16. Connexion de l'épicerie
@@ -122,13 +123,13 @@ Content-Type: application/json
 { "nom": "Miel de fleurs", "description": "Produit local.", "prix": 2500 }
 
 
-
-
 ### 19. TEST CLÉ : l'épicerie modifie la baguette de la boulangerie
 PUT http://localhost:3000/api/produits/1
 Content-Type: application/json
 
 { "nom": "Produit piraté", "prix": 0 }
+
+
 
 
 ### ===== C. CATALOGUE PUBLIC =====

@@ -355,3 +355,138 @@ a {
   outline: 3px solid var(--texte);
   outline-offset: 2px;
 }
+
+
+/* ===== Établissements ===== */
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 20px;
+}
+
+.grille .carte {
+  margin-bottom: 0;
+}
+
+.carte-boutique {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.carte-texte {
+  flex: 1;
+  min-width: 0;
+}
+
+.titre-carte {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+/* Description limitée à 3 lignes dans la liste */
+.carte-texte p {
+  display: -webkit-box;
+  margin: 6px 0 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.vignette,
+.vignette-vide {
+  flex: none;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background: #C9CCC3;
+}
+
+.vignette {
+  object-fit: cover;
+}
+
+.vignette-vide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texte-doux);
+  font-size: 12px;
+  text-align: center;
+}
+
+
+/* ===== Page d'une boutique ===== */
+
+.lien-retour {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.bloc-banniere {
+  margin-bottom: 12px;
+}
+
+.banniere,
+.banniere-vide {
+  display: block;
+  width: 100%;
+  height: 180px;
+  border-radius: var(--rayon);
+  background: #C9CCC3;
+}
+
+.banniere {
+  object-fit: cover;
+}
+
+.banniere-vide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texte-doux);
+}
+
+.nom-boutique {
+  overflow-wrap: anywhere;
+}
+
+.liste-produits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.produit {
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--trait);
+  flex-wrap: nowrap;
+}
+
+.produit:last-child {
+  border-bottom: 0;
+}
+
+.produit-nom {
+  display: block;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.produit-description {
+  margin: 2px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.prix {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+

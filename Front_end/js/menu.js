@@ -10,19 +10,19 @@ import { lireUtilisateur, deconnecter } from './session.js';
 */
 const MENUS = {
   visiteur: [
-    { texte: 'Établissements', lien: '/boutiques.html' },
+    { texte: 'Établissements', lien: '/liste-etablissements.html' },
     { texte: 'Connexion', lien: '/connexion.html' },
     { texte: 'Inscription', lien: '/inscription.html' }
   ],
   client: [
-    { texte: 'Établissements', lien: '/boutiques.html' },
+    { texte: 'Établissements', lien: '/liste-etablissements.html' },
     { texte: 'Panier', lien: '/panier.html' },
-    { texte: 'Mes commandes', lien: '/commandes.html' }
+    { texte: 'Mes commandes', lien: '/mes-commandes.html' }
   ],
   commercant: [
-    { texte: 'Commandes', lien: '/commercant/commandes.html' },
-    { texte: 'Historique', lien: '/commercant/historique.html' },
-    { texte: 'Ma boutique', lien: '/commercant/boutique.html' },
+    { texte: 'Commandes', lien: '/commercant/tableau-de-bord.html' },
+    { texte: 'Historique', lien: '/commercant/historique-commandes.html' },
+    { texte: 'Ma boutique', lien: '/commercant/ma-boutique.html' },
     { texte: 'Produits', lien: '/commercant/produits.html' }
   ]
 };

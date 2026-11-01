@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boutique · Ma MarketPlace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/fiche-etablissement.js"></script>
+</head>
+
+
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="conteneur">
+    <a class="lien-retour" href="/liste-etablissements.html">← Tous les établissements</a>
+
+    <div id="messages" class="message" tabindex="-1" hidden></div>
+
+    <!-- Cachée tant que la boutique n'est pas chargée -->
+    <article id="fiche" class="carte" hidden>
+      <div id="banniere" class="bloc-banniere"></div>
+
+      <h1 id="nom" class="nom-boutique"></h1>
+      <span id="secteur" class="badge"></span>
+      <p id="description" class="discret"></p>
+
+      <h2>Produits</h2>
+      <ul id="liste-produits" class="liste-produits"></ul>
+      <p id="aucun-produit" class="discret" hidden>Aucun produit disponible pour le moment.</p>
+    </article>
+  </main>
+</body>
+
+
+</html>
+
+
