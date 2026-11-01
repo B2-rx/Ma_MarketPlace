@@ -13,12 +13,20 @@
   <!-- type="module" : le fichier peut utiliser import. Le script est chargé
        après la page, et vient de NOTRE site (autorisé par la CSP). -->
   <script type="module" src="/js/accueil.js"></script>
+  <script type="module" src="/js/menu.js"></script>
+
 </head>
+
+
+
+
 
 <body>
   <header class="entete">
-    <span class="marque">Ma MarketPlace</span>
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
   </header>
+
 
   <main class="conteneur">
     <section class="carte">
