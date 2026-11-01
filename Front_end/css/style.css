@@ -251,3 +251,107 @@ a {
 .ligne-gauche {
   justify-content: flex-start;
 }
+
+
+
+/* ===== Menu principal ===== */
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+}
+
+.menu a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+}
+
+/* La page où l'on se trouve est soulignée et en gras */
+.menu a[aria-current="page"] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.menu .puce {
+  min-height: 44px;
+}
+
+/* Un email long ne doit pas déformer l'en-tête */
+.menu-email {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ===== Formulaires : mise en page ===== */
+
+.conteneur-etroit {
+  max-width: 460px;
+}
+
+.bouton-plein {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.centre {
+  text-align: center;
+}
+
+/* Case à cocher avec sa phrase, assez grande pour un doigt */
+.case {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 8px;
+}
+
+.case input {
+  width: 20px;
+  height: 20px;
+}
+
+/* Choix Client / Commerçant */
+.choix-role {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.choix-role legend {
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.option-role {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 2px solid var(--bordure);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.option-role:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--texte-sur-accent);
+  font-weight: 700;
+}
+
+.option-role:focus-within {
+  outline: 3px solid var(--texte);
+  outline-offset: 2px;
+}
