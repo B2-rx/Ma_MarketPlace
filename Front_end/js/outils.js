@@ -116,3 +116,50 @@ export function lireRetour() {
 
 
 
+/* ===== Images ===== */
+
+/*
+  Forme exacte d'un chemin d'image fabriqué par le serveur :
+  "uploads/" + 32 caractères hexadécimaux + extension.
+*/
+const MODELE_IMAGE = /^uploads\/[a-f0-9]{32}\.(jpg|png|webp)$/;
+
+/*
+  Transforme le chemin reçu du serveur en adresse utilisable, ou renvoie null.
+  Un chemin qui n'a pas cette forme exacte est refusé : même si la base
+  contenait un jour une valeur piégée, elle ne servirait jamais d'adresse d'image.
+*/
+export function urlImage(chemin) {
+  if (typeof chemin !== 'string' || !MODELE_IMAGE.test(chemin)) {
+    return null;
+  }
+
+  return '/' + chemin;
+}
+
+/*
+  Crée l'image d'une boutique, ou un bloc « Pas d'image » si elle n'en a pas.
+    classe : "vignette" donne "vignette" (image) ou "vignette-vide" (sans image)
+  alt est vide : le nom de la boutique est toujours écrit à côté, la lire
+  deux fois serait inutile pour un lecteur d'écran.
+*/
+export function creerImage(chemin, description, classe) {
+  const adresse = urlImage(chemin);
+
+  if (adresse === null) {
+    return creerElement('div', "Pas d'image", classe + '-vide');
+  }
+
+  const image = document.createElement('img');
+
+  image.src = adresse;
+  image.alt = description;
+  image.loading = 'lazy';
+  image.className = classe;
+
+  return image;
+}
+
+
+
+
