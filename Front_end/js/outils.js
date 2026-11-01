@@ -162,4 +162,31 @@ export function creerImage(chemin, description, classe) {
 
 
 
+/* ===== Confirmation ===== */
+
+/*
+  Ouvre une boîte de dialogue (<dialog>) et attend le choix de l'utilisateur.
+  Renvoie true s'il clique sur le bouton dont la valeur est "oui", false pour
+  tout le reste (bouton « non », touche Échap).
+  Les boutons de la boîte sont dans un <form method="dialog"> : leur valeur
+  devient dialogue.returnValue à la fermeture, sans aucun JavaScript.
+*/
+export function demanderConfirmation(dialogue) {
+  return new Promise((resolve) => {
+    // La valeur de la fermeture précédente ne doit pas compter
+    dialogue.returnValue = '';
+
+    dialogue.addEventListener(
+      'close',
+      () => resolve(dialogue.returnValue === 'oui'),
+      { once: true }
+    );
+
+    // showModal : fond bloqué, focus gardé dans la boîte, Échap pour fermer
+    dialogue.showModal();
+  });
+}
+
+
+
 

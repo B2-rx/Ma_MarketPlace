@@ -3,13 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Boutique · Ma MarketPlace</title>
+  <title>Établissement · Ma MarketPlace</title>
   <link rel="stylesheet" href="/css/style.css">
   <script type="module" src="/js/menu.js"></script>
   <script type="module" src="/js/fiche-etablissement.js"></script>
 </head>
-
-
 
 <body>
   <header class="entete">
@@ -22,7 +20,7 @@
 
     <div id="messages" class="message" tabindex="-1" hidden></div>
 
-    <!-- Cachée tant que la boutique n'est pas chargée -->
+    <!-- Cachée tant que l'établissement n'est pas chargé -->
     <article id="fiche" class="carte" hidden>
       <div id="banniere" class="bloc-banniere"></div>
 
@@ -31,13 +29,69 @@
       <p id="description" class="discret"></p>
 
       <h2>Produits</h2>
+
+      <!-- Retour de l'ajout au panier (succès, erreur, conflit refusé) -->
+      <div id="messages-ajout" class="message" tabindex="-1" hidden></div>
+
+      <!--Boîte pour les visiteurs non connectés. La croix est un bouton de form
+    method="dialog" : il ferme la boîte sans JavaScript. Échap fonctionne aussi.
+    -->
+
+  <dialog id="dialogue-connexion" aria-labelledby="titre-connexion">
+    <form method="dialog">
+      <div class="dialogue-entete">
+        <h2 id="titre-connexion">Connecte-toi pour commander</h2>
+ 
+        <button class="bouton-fermer" value="fermer" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <p>Pour ajouter au panier, connecte-toi ou crée un compte.</p>
+
+      <div class="dialogue-actions">
+        <a class="bouton bouton-lien" href="/connexion.html?retour=/liste-etablissements.html">Se connecter</a>
+        <a class="bouton bouton-secondaire bouton-lien" href="/inscription.html">Créer un compte</a>
+      </div>
+    </form>
+  </dialog>
+  
+
       <ul id="liste-produits" class="liste-produits"></ul>
       <p id="aucun-produit" class="discret" hidden>Aucun produit disponible pour le moment.</p>
     </article>
   </main>
+
+  <!--
+    Boîte de conflit : le panier contient un autre établissement.
+    Les boutons sont dans un form method="dialog" : leur valeur ("oui" ou "non")
+    est lue par demanderConfirmation().
+  -->
+  <dialog id="dialogue-conflit" aria-labelledby="titre-conflit">
+    <form method="dialog">
+      
+      <div class="dialogue-entete">
+        <h2 id="titre-conflit">Un seul établissement par panier</h2>
+
+        <button class="bouton-fermer" value="non" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <p>
+        Ton panier contient déjà des produits de « <strong id="conflit-nom"></strong> ».
+        Pour commander ici, il faut d'abord le vider.
+      </p>
+
+      <div class="dialogue-actions">
+        <button class="bouton" value="oui">Vider le panier et continuer</button>
+        <button class="bouton bouton-secondaire" value="non">Garder mon panier</button>
+      </div>
+    </form>
+  </dialog>
 </body>
-
-
 </html>
-
-

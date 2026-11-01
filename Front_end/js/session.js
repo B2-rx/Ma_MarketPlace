@@ -8,9 +8,11 @@ import { lireRetour } from './outils.js';
   établissements (étape 28), "commercant" vers son tableau de bord (étape 31).
 */
 const PAGES_ACCUEIL = {
-  client: '/',
+  client: '/liste-etablissements.html',
   commercant: '/'
 };
+
+
 
 /*
   Lit l'utilisateur connecté, ou null pour un visiteur.
