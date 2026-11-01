@@ -9,10 +9,10 @@ POST http://localhost:3000/api/boutiques/ma-boutique/image
 Content-Type: multipart/form-data; boundary=LimiteTest
 
 --LimiteTest
-Content-Disposition: form-data; name="image"; filename="boutique.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="image"; filename="boulangerie.webp"
+Content-Type: image/webp
 
-< ./images-test/boutique.png
+< ./images-test/boulangerie.webp
 --LimiteTest--
 
 ### 3. Connexion de la boulangerie (commerçant)
@@ -26,11 +26,13 @@ POST http://localhost:3000/api/boutiques/ma-boutique/image
 Content-Type: multipart/form-data; boundary=LimiteTest
 
 --LimiteTest
-Content-Disposition: form-data; name="image"; filename="boutique.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="image"; filename="boulangerie.webp"
+Content-Type: image/webp
 
-< ./images-test/boutique.png
+
+< ./images-test/boulangerie.webp
 --LimiteTest--
+
 
 ### 5. Faux fichier déguisé en PNG (doit être refusé)
 POST http://localhost:3000/api/boutiques/ma-boutique/image
@@ -59,10 +61,10 @@ POST http://localhost:3000/api/boutiques/ma-boutique/image
 Content-Type: multipart/form-data; boundary=LimiteTest
 
 --LimiteTest
-Content-Disposition: form-data; name="image"; filename="boutique.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="image"; filename="boulangerie.webp"
+Content-Type: image/webp
 
-< ./images-test/boutique.png
+< ./images-test/boulangerie.webp
 --LimiteTest--
 
 ### 8. Déconnexion
@@ -73,8 +75,8 @@ POST http://localhost:3000/api/boutiques/ma-boutique/image
 Content-Type: multipart/form-data; boundary=LimiteTest
 
 --LimiteTest
-Content-Disposition: form-data; name="image"; filename="boutique.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="image"; filename="boulangerie.webp"
+Content-Type: image/webp
 
-< ./images-test/boutique.png
+< ./images-test/boulangerie.webp
 --LimiteTest--
