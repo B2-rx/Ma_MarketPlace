@@ -9,7 +9,7 @@ Content-Type: application/json
 ### 2. Inscription de la boulangerie (commerçant)
 POST http://localhost:3000/api/auth/inscription
 Content-Type: application/json
-
+s
 { "email": "boulangerie@example.com", "telephone": "0698765432", "motDePasse": "Croissant2026", "role": "commercant" }
 
 ### 3. Inscription de l'épicerie (commerçant)
