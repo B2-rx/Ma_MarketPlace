@@ -1,0 +1,34 @@
+### 1. Page du panier
+GET http://localhost:3000/panier.html
+
+### 2. Page du panier, sans l'extension
+GET http://localhost:3000/panier
+
+### 3. Module de la page panier
+GET http://localhost:3000/js/page-panier.js
+
+### 4. Module d'ajout au panier
+GET http://localhost:3000/js/ajout-panier.js
+
+### 5. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 6. Mettre le croissant (id 2) en rupture
+PUT http://localhost:3000/api/produits/2
+Content-Type: application/json
+
+{ "nom": "Croissant", "description": "", "prix": 300, "disponible": false }
+
+### ===== PAUSE : actualise la page du panier d'Alice (voir ci-dessous) =====
+
+### 7. Remettre le croissant disponible
+PUT http://localhost:3000/api/produits/2
+Content-Type: application/json
+
+{ "nom": "Croissant", "description": "", "prix": 300, "disponible": true }
+
+### 8. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
