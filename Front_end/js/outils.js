@@ -90,3 +90,29 @@ export async function pendant(bouton, travail) {
     bouton.disabled = false;
   }
 }
+
+
+
+/* ===== Redirection après connexion ===== */
+
+/*
+  Lit le paramètre "retour" de l'adresse (?retour=/panier.html) : la page
+  que l'utilisateur voulait voir avant d'être renvoyé vers la connexion.
+
+  ⚠️ SÉCURITÉ : ce paramètre est modifiable par n'importe qui. Un lien piégé
+  pourrait contenir ?retour=//site-pirate.com. On n'accepte donc qu'un CHEMIN
+  de notre site, commençant par UN SEUL "/" (jamais "//", "/\" ni "https://").
+  Renvoie null si le paramètre est absent ou suspect.
+*/
+export function lireRetour() {
+  const retour = new URLSearchParams(window.location.search).get('retour');
+
+  if (retour === null || !/^\/(?![\/\\])[\w\-./]*$/.test(retour)) {
+    return null;
+  }
+
+  return retour;
+}
+
+
+

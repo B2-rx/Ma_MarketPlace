@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connexion · Ma MarketPlace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/connexion.js"></script>
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="conteneur conteneur-etroit">
+    <section class="carte">
+      <h1>Connexion</h1>
+      <p class="discret">Content de te revoir.</p>
+
+      <!-- Zone des erreurs. tabindex="-1" : le script peut y placer le focus. -->
+      <div id="messages" class="message" tabindex="-1" hidden></div>
+
+      <!-- novalidate : nos propres contrôles (validation.js) remplacent ceux du navigateur -->
+      <form id="formulaire" novalidate>
+        <label for="email">Email</label>
+        <input class="champ" id="email" name="email" type="email" autocomplete="email" required>
+
+        <label for="mot-de-passe">Mot de passe</label>
+        <input class="champ" id="mot-de-passe" name="motDePasse" type="password" autocomplete="current-password" required>
+
+        <label class="case">
+          <input type="checkbox" id="afficher">
+          Afficher le mot de passe
+        </label>
+
+        <button class="bouton bouton-plein" id="valider" type="submit">Se connecter</button>
+      </form>
+
+      <p class="discret centre">Pas de compte ? <a href="/inscription.html">Créer un compte</a></p>
+    </section>
+  </main>
+</body>
+</html>
+
+
+

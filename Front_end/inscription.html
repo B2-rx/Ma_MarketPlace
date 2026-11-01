@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscription · Ma MarketPlace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/inscription.js"></script>
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="conteneur conteneur-etroit">
+    <section class="carte">
+      <h1>Créer un compte</h1>
+
+      <div id="messages" class="message" tabindex="-1" hidden></div>
+
+      <form id="formulaire" novalidate>
+        <fieldset class="choix-role">
+          <legend>Je suis</legend>
+
+          <label class="option-role">
+            <input type="radio" name="role" value="client" checked>
+            Client
+          </label>
+
+          <label class="option-role">
+            <input type="radio" name="role" value="commercant">
+            Commerçant
+          </label>
+        </fieldset>
+
+        <label for="email">Email</label>
+        <input class="champ" id="email" name="email" type="email" autocomplete="email" required>
+
+        <label for="telephone">Téléphone</label>
+        <input class="champ" id="telephone" name="telephone" type="tel" autocomplete="tel" placeholder="+225 07 00 00 00 00" required>
+
+        <label for="mot-de-passe">Mot de passe</label>
+        <input class="champ" id="mot-de-passe" name="motDePasse" type="password" autocomplete="new-password" aria-describedby="aide-mdp" required>
+        <p class="discret" id="aide-mdp">8 caractères minimum, avec au moins une lettre et un chiffre.</p>
+
+        <label class="case">
+          <input type="checkbox" id="afficher">
+          Afficher le mot de passe
+        </label>
+
+        <button class="bouton bouton-plein" id="valider" type="submit">Créer mon compte</button>
+      </form>
+
+      <p class="discret centre">Déjà inscrit ? <a href="/connexion.html">Se connecter</a></p>
+    </section>
+  </main>
+</body>
+</html>
+
+
+
