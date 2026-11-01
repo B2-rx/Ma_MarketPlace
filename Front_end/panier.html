@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon panier · Ma MarketPlace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/page-panier.js"></script>
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="conteneur">
+    <h1>Mon panier</h1>
+
+    <div id="messages" class="message" tabindex="-1" hidden></div>
+
+    <!-- Panier sans produit -->
+    <section id="panier-vide" class="carte" hidden>
+      <p>Ton panier est vide.</p>
+      <a href="/liste-etablissements.html">Voir les établissements</a>
+    </section>
+
+    <!-- Panier rempli : cachée tant que rien n'est chargé -->
+    <section id="panier-contenu" class="carte" hidden>
+      <p class="discret">
+        Établissement :
+        <a id="nom-boutique" href="/liste-etablissements.html"></a>
+      </p>
+
+  
+
+      <ul id="liste-panier" class="liste-produits"></ul>
+
+      <div class="ligne">
+        <strong>Total</strong>
+        <strong id="total" class="total-panier"></strong>
+      </div>
+
+      <button id="vider" class="bouton bouton-secondaire bouton-plein" type="button">Vider le panier</button>
+    </section>
+  </main>
+
+  <!-- Confirmation avant de vider le panier -->
+  <dialog id="dialogue-vider" aria-labelledby="titre-vider">
+    <form method="dialog">
+
+      <div class="dialogue-entete">
+        <h2 id="titre-vider">Vider le panier ?</h2>
+
+        <button class="bouton-fermer" value="non" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <p>Tous les produits seront retirés.</p>
+
+      <div class="dialogue-actions">
+        <button class="bouton" value="oui">Vider le panier</button>
+        <button class="bouton bouton-secondaire" value="non">Annuler</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
+
+
+
+
