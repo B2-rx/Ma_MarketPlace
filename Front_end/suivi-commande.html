@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suivi de commande · Ma MarketPlace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/page-suivi-commande.js"></script>
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="conteneur">
+    <a class="lien-retour" href="/mes-commandes.html">← Mes commandes</a>
+
+    <div id="messages" class="message" tabindex="-1" hidden></div>
+
+    <!-- Cachée tant que la commande n'est pas chargée -->
+    <article id="commande" class="carte" hidden>
+      <h1>Commande n° <span id="numero"></span></h1>
+
+      <p class="discret">
+        Établissement :
+        <a id="boutique" href="/liste-etablissements.html"></a>
+      </p>
+
+      <span id="statut" class="badge"></span>
+
+      <!-- Les quatre étapes : remplies par le script -->
+      <ol id="etapes" class="etapes" aria-label="Avancement de la commande"></ol>
+
+      <!-- Annulée ou refusée : un message explique qui a fermé la commande -->
+      <p id="info-statut" class="message" hidden></p>
+
+      <p id="maj" class="discret"></p>
+
+      <h2>Détail</h2>
+      <ul id="lignes" class="liste-produits"></ul>
+
+      <div class="ligne">
+        <strong>Total</strong>
+        <strong id="total" class="total-panier"></strong>
+      </div>
+
+      <h2>Livraison</h2>
+      <p id="adresse"></p>
+
+      <div class="actions-suivi">
+        <button id="rafraichir" class="bouton" type="button">Rafraîchir le statut</button>
+
+        <!-- Grisé quand la commande n'est plus annulable -->
+        <button
+          id="annuler"
+          class="bouton bouton-secondaire"
+          type="button"
+          aria-describedby="aide-annulation"
+        >Annuler la commande</button>
+
+        <p id="aide-annulation" class="discret" hidden>Vous ne pouvez plus annuler cette commande.</p>
+      </div>
+
+      <!-- Lue par les lecteurs d'écran après chaque rafraîchissement -->
+      <p id="verification" class="discret" role="status"></p>
+    </article>
+  </main>
+
+  <!-- Confirmation avant d'annuler -->
+  <dialog id="dialogue-annuler" aria-labelledby="titre-annuler">
+    <form method="dialog">
+      <div class="dialogue-entete">
+        <h2 id="titre-annuler">Annuler la commande ?</h2>
+
+        <button class="bouton-fermer" value="non" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <p>Cette action est définitive.</p>
+
+      <div class="dialogue-actions">
+        <button class="bouton" value="oui">Annuler la commande</button>
+        <button class="bouton bouton-secondaire" value="non">Garder ma commande</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
+
+
+
+
+
