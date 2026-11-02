@@ -1,0 +1,85 @@
+### Numéro de la commande à piloter (visible dans l'adresse du suivi : ?id=...)
+@commandeId = 7
+
+### 1. Page de suivi
+GET http://localhost:3000/suivi-commande.html
+
+### 2. Page de suivi, sans l'extension
+GET http://localhost:3000/suivi-commande
+
+### 3. Page de l'historique client
+GET http://localhost:3000/mes-commandes
+
+### 4. Module du suivi
+GET http://localhost:3000/js/page-suivi-commande.js
+
+### 5. Module de l'historique
+GET http://localhost:3000/js/page-mes-commandes.js
+
+### 6. Module du panier
+GET http://localhost:3000/js/page-panier.js
+
+### 7. Module de validation
+GET http://localhost:3000/js/validation.js
+
+
+### ===== LE COMMERÇANT (via REST Client) =====
+
+### 8. Connexion de la boulangerie
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "boulangerie@example.com", "motDePasse": "Croissant2026" }
+
+### 9. Accepter la commande
+PATCH http://localhost:3000/api/commercant/commandes/{{commandeId}}/statut
+Content-Type: application/json
+
+{ "statut": "en_preparation" }
+
+### 10. Prête
+PATCH http://localhost:3000/api/commercant/commandes/{{commandeId}}/statut
+Content-Type: application/json
+
+{ "statut": "prete" }
+
+### 11. En livraison
+PATCH http://localhost:3000/api/commercant/commandes/{{commandeId}}/statut
+Content-Type: application/json
+
+{ "statut": "en_livraison" }
+
+### 12. Terminée
+PATCH http://localhost:3000/api/commercant/commandes/{{commandeId}}/statut
+Content-Type: application/json
+
+{ "statut": "terminee" }
+
+### 13. Refuser (commande encore en attente)
+PATCH http://localhost:3000/api/commercant/commandes/{{commandeId}}/statut
+Content-Type: application/json
+
+{ "statut": "refusee" }
+
+### 14. Annuler (commande acceptée ou prête : rupture de stock)
+PATCH http://localhost:3000/api/commercant/commandes/{{commandeId}}/statut
+Content-Type: application/json
+
+{ "statut": "annulee" }
+
+### 15. Mettre le croissant (produit 2) en rupture
+PUT http://localhost:3000/api/produits/2
+Content-Type: application/json
+
+{ "nom": "Croissant", "description": "", "prix": 300, "disponible": false }
+
+### 16. Remettre le croissant disponible
+PUT http://localhost:3000/api/produits/2
+Content-Type: application/json
+
+{ "nom": "Croissant", "description": "", "prix": 300, "disponible": true }
+
+### 17. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
