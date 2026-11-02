@@ -649,7 +649,61 @@ dialog::backdrop {
 
 
 
+/* ===== Commande : formulaire du panier ===== */
 
+.bloc-commande {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--trait);
+}
+
+textarea.champ {
+  min-height: 96px;
+  resize: vertical;
+}
+
+
+/* ===== Suivi d'une commande ===== */
+
+/* Les quatre étapes du cycle de vie, en barres de progression */
+.etapes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 16px 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.etape {
+  padding-top: 8px;
+  border-top: 6px solid var(--trait);
+  color: var(--texte-doux);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.etape-faite {
+  border-top-color: var(--accent);
+  color: var(--texte);
+}
+
+.etape-courante {
+  border-top-color: var(--accent);
+  color: var(--texte);
+  font-weight: 700;
+}
+
+.actions-suivi {
+  display: grid;
+  gap: 8px;
+  max-width: 420px;
+  margin-top: 16px;
+}
+
+.actions-suivi p {
+  margin: 0;
+}
 
 
 
