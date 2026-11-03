@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tableau de bord · Ma MarketPlace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/menu.js"></script>
+  <script type="module" src="/js/page-tableau-de-bord.js"></script>
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="conteneur">
+    <h1>Commandes en cours</h1>
+
+    <!-- Retour des actions (statut mis à jour, refus du serveur...) et accès refusé -->
+    <div id="messages" class="message" tabindex="-1" hidden></div>
+
+    <div id="tableau" class="tableau">
+
+      <!-- Liste des commandes -->
+      <section id="panneau-liste" class="panneau-liste" aria-label="Liste des commandes">
+        <div id="filtres" class="filtres" role="group" aria-label="Filtrer par statut"></div>
+
+        <div class="ligne ligne-actualiser">
+          <button id="actualiser" class="bouton bouton-secondaire" type="button">Actualiser</button>
+          <span id="actualisation" class="discret" role="status"></span>
+        </div>
+
+        <div id="messages-liste" class="message" tabindex="-1" hidden></div>
+
+        <!-- Lu par les lecteurs d'écran pendant le chargement -->
+        <p id="etat" class="discret" role="status"></p>
+
+        <div id="liste"></div>
+      </section>
+
+      <!-- Détail de la commande choisie -->
+      <section id="panneau-detail" class="panneau-detail" aria-label="Détail de la commande">
+        <p id="detail-vide" class="carte discret">Sélectionne une commande pour voir son détail.</p>
+
+        <article id="detail" class="carte" hidden>
+          <button id="retour-liste" class="lien-bouton btn-retour-liste" type="button">← Retour aux commandes</button>
+
+          <!-- tabindex="-1" : le script peut y placer le focus à l'ouverture -->
+          <h2 id="titre-detail" tabindex="-1">Commande n° <span id="numero"></span></h2>
+
+          <span id="statut" class="badge"></span>
+
+          <!-- Annulée ou refusée : un message explique qui a fermé la commande -->
+          <p id="info-statut" class="message" hidden></p>
+
+          <p id="maj" class="discret"></p>
+
+          <h3>Client</h3>
+          <p>Téléphone : <span id="telephone"></span></p>
+
+          <h3>Livraison</h3>
+          <p id="adresse"></p>
+
+          <h3>Produits</h3>
+          <ul id="lignes" class="liste-produits"></ul>
+
+          <div class="ligne">
+            <strong>Total</strong>
+            <strong id="total" class="total-panier"></strong>
+          </div>
+
+          <!-- Les boutons viennent du serveur (champ "actions") -->
+          <div id="actions" class="actions-commande"></div>
+          <p id="aucune-action" class="discret" hidden>Plus aucune action possible sur cette commande.</p>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <!-- Confirmation avant une action définitive (refuser, annuler, terminer) -->
+  <dialog id="dialogue-statut" aria-labelledby="titre-confirmation">
+    <form method="dialog">
+      <div class="dialogue-entete">
+        <h2 id="titre-confirmation"></h2>
+
+        <button class="bouton-fermer" value="non" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <p id="texte-confirmation"></p>
+
+      <div class="dialogue-actions">
+        <button class="bouton" value="oui">Confirmer</button>
+        <button class="bouton bouton-secondaire" value="non">Retour</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,56 @@
+### Numéro d'une commande à annuler côté client (visible dans le tableau de bord)
+@commandeId = 1
+
+### 1. Page du tableau de bord
+GET http://localhost:3000/commercant/tableau-de-bord.html
+
+### 2. Page du tableau de bord, sans l'extension
+GET http://localhost:3000/commercant/tableau-de-bord
+
+### 3. Module du tableau de bord
+GET http://localhost:3000/js/page-tableau-de-bord.js
+
+### 4. Module de session
+GET http://localhost:3000/js/session.js
+
+
+### ===== LE CLIENT (via REST Client) : fabriquer une commande =====
+
+### 5. Connexion d'Alice
+POST http://localhost:3000/api/auth/connexion
+Content-Type: application/json
+
+{ "email": "alice@example.com", "motDePasse": "Motdepasse1" }
+
+### 6. Vider le panier
+DELETE http://localhost:3000/api/panier
+
+### 7. Ajouter 2 croissants (produit 2)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 2, "quantite": 2 }
+
+### 8. Ajouter 1 baguette (produit 1)
+POST http://localhost:3000/api/panier/lignes
+Content-Type: application/json
+
+{ "produitId": 1, "quantite": 1 }
+
+### 9. Passer la commande
+POST http://localhost:3000/api/commandes
+Content-Type: application/json
+
+{ "adresseLivraison": "12 rue des Lilas, Abidjan" }
+
+### 10. Alice tente d'utiliser le tableau de bord commerçant (doit être refusé)
+GET http://localhost:3000/api/commercant/commandes
+
+### 11. Annuler la commande (adapte @commandeId en haut du fichier)
+POST http://localhost:3000/api/commandes/{{commandeId}}/annuler
+
+### 12. Déconnexion
+POST http://localhost:3000/api/auth/deconnexion
+
+
+
