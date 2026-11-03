@@ -96,7 +96,7 @@ export async function pendant(bouton, travail) {
 /* ===== Redirection après connexion ===== */
 
 /*
-  Lit le paramètre "retour" de l'adresse (?retour=/panier.html) : la page
+  Lit le paramètre "retour" de l'adresse (?retour=/panier/panier.html) : la page
   que l'utilisateur voulait voir avant d'être renvoyé vers la connexion.
 
   ⚠️ SÉCURITÉ : ce paramètre est modifiable par n'importe qui. Un lien piégé

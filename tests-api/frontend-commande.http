@@ -2,25 +2,25 @@
 @commandeId = 7
 
 ### 1. Page de suivi
-GET http://localhost:3000/suivi-commande.html
+GET http://localhost:3000/commandes/suivi-commande.html
 
 ### 2. Page de suivi, sans l'extension
-GET http://localhost:3000/suivi-commande
+GET http://localhost:3000/suivi-commande/suivi-commande.html
 
 ### 3. Page de l'historique client
-GET http://localhost:3000/mes-commandes
+GET http://localhost:3000/mes-commandes/mes-commandes.html
 
 ### 4. Module du suivi
-GET http://localhost:3000/js/page-suivi-commande.js
+GET http://localhost:3000/commandes/page-suivi-commande.js
 
 ### 5. Module de l'historique
-GET http://localhost:3000/js/page-mes-commandes.js
+GET http://localhost:3000/commandes/page-mes-commandes.js
 
 ### 6. Module du panier
-GET http://localhost:3000/js/page-panier.js
+GET http://localhost:3000/panier/page-panier.js
 
 ### 7. Module de validation
-GET http://localhost:3000/js/validation.js
+GET http://localhost:3000/partage/js/validation.js
 
 
 ### ===== LE COMMERÇANT (via REST Client) =====

@@ -1,8 +1,8 @@
 /* ===== connexion.js : la page de connexion ===== */
-import { appeler } from './api.js';
-import { afficherMessages, pendant } from './outils.js';
-import { lireUtilisateur, redirigerApresConnexion } from './session.js';
-import { validerConnexion } from './validation.js';
+import { appeler } from '/partage/js/api.js';
+import { afficherMessages, pendant } from '/partage/js/outils.js';
+import { lireUtilisateur, redirigerApresConnexion } from '/partage/js/session.js';
+import { validerConnexion } from '/partage/js/validation.js';
 
 const formulaire = document.getElementById('formulaire');
 const zone = document.getElementById('messages');

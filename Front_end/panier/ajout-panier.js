@@ -1,6 +1,6 @@
 /* ===== ajout-panier.js : ajouter un produit, avec le cas du conflit ===== */
-import { appeler } from './api.js';
-import { afficherMessages, demanderConfirmation } from './outils.js';
+import { appeler } from '/partage/js/api.js';
+import { afficherMessages, demanderConfirmation } from '/partage/js/outils.js';
 
 // Envoie l'ajout. Aucun prix : seulement un identifiant et une quantité
 function envoyerAjout(produitId, quantite) {
@@ -57,7 +57,7 @@ export async function ajouterAuPanier(produit, quantite, elements) {
 
   // Session expirée : on renvoie vers la connexion
   if (reponse.statut === 401) {
-    window.location.href = '/connexion.html?retour=/liste-etablissements.html';
+    window.location.href = '/connexion/connexion.html?retour=/etablissements/liste-etablissements.html';
     return;
   }
 

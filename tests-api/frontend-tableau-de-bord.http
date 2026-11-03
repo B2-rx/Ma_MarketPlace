@@ -2,16 +2,16 @@
 @commandeId = 1
 
 ### 1. Page du tableau de bord
-GET http://localhost:3000/commercant/tableau-de-bord.html
+GET http://localhost:3000/commercant/tableau-de-bord/tableau-de-bord.html
 
 ### 2. Page du tableau de bord, sans l'extension
-GET http://localhost:3000/commercant/tableau-de-bord
+GET http://localhost:3000/commercant/tableau-de-bord/tableau-de-bord.html
 
 ### 3. Module du tableau de bord
-GET http://localhost:3000/js/page-tableau-de-bord.js
+GET http://localhost:3000/commercant/tableau-de-bord/page-tableau-de-bord.js
 
 ### 4. Module de session
-GET http://localhost:3000/js/session.js
+GET http://localhost:3000/partage/js/session.js
 
 
 ### ===== LE CLIENT (via REST Client) : fabriquer une commande =====

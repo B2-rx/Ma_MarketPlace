@@ -1,6 +1,6 @@
 /* ===== page-mes-commandes.js : l'historique du client ===== */
-import { appeler } from './api.js';
-import { afficherMessages, creerElement, formaterDate, formaterPrix } from './outils.js';
+import { appeler } from '/partage/js/api.js';
+import { afficherMessages, creerElement, formaterDate, formaterPrix } from '/partage/js/outils.js';
 
 // Statuts d'une commande fermée sans être livrée : badge neutre
 const STATUTS_NEUTRES = ['annulee', 'refusee'];
@@ -20,7 +20,7 @@ function creerCarte(commande) {
   const lien = creerElement('a', 'Commande n° ' + commande.id);
 
   // L'identifiant est un entier fabriqué par le serveur
-  lien.href = '/suivi-commande.html?id=' + encodeURIComponent(commande.id);
+  lien.href = '/commandes/suivi-commande.html?id=' + encodeURIComponent(commande.id);
   titre.append(lien);
 
   texte.append(
@@ -58,7 +58,7 @@ async function charger() {
     const vide = creerElement('p', "Tu n'as pas encore passé de commande. ");
     const lien = creerElement('a', 'Voir les établissements');
 
-    lien.href = '/liste-etablissements.html';
+    lien.href = '/etablissements/liste-etablissements.html';
     vide.append(lien);
     zoneListe.append(vide);
     return;

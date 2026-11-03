@@ -1,8 +1,8 @@
 /* ===== inscription.js : la page d'inscription ===== */
-import { appeler } from './api.js';
-import { afficherMessages, pendant } from './outils.js';
-import { lireUtilisateur, redirigerApresConnexion } from './session.js';
-import { validerInscription } from './validation.js';
+import { appeler } from '/partage/js/api.js';
+import { afficherMessages, pendant } from '/partage/js/outils.js';
+import { lireUtilisateur, redirigerApresConnexion } from '/partage/js/session.js';
+import { validerInscription } from '/partage/js/validation.js';
 
 const formulaire = document.getElementById('formulaire');
 const zone = document.getElementById('messages');
@@ -101,7 +101,7 @@ formulaire.addEventListener('submit', (evenement) => {
     if (connexion.ok) {
       redirigerApresConnexion(connexion.donnees.utilisateur.role);
     } else {
-      window.location.href = '/connexion.html';
+      window.location.href = '/connexion/connexion.html';
     }
   });
 });

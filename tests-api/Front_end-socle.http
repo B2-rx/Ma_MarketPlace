@@ -2,7 +2,7 @@
 GET http://localhost:3000/
 
 ### 2. La feuille de style
-GET http://localhost:3000/css/style.css
+GET http://localhost:3000/partage/css/style.css
 
 ### 3. Le dossier Back_end n'est PAS servi
 GET http://localhost:3000/Back_end/.env

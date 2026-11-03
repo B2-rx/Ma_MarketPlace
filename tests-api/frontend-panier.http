@@ -1,14 +1,14 @@
 ### 1. Page du panier
-GET http://localhost:3000/panier.html
+GET http://localhost:3000/panier/panier.html
 
 ### 2. Page du panier, sans l'extension
-GET http://localhost:3000/panier
+GET http://localhost:3000/panier/panier.html
 
 ### 3. Module de la page panier
-GET http://localhost:3000/js/page-panier.js
+GET http://localhost:3000/panier/page-panier.js
 
 ### 4. Module d'ajout au panier
-GET http://localhost:3000/js/ajout-panier.js
+GET http://localhost:3000/panier/ajout-panier.js
 
 ### 5. Connexion de la boulangerie
 POST http://localhost:3000/api/auth/connexion

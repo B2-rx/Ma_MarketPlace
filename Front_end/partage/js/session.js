@@ -8,8 +8,8 @@ import { lireRetour } from './outils.js';
   établissements (étape 28), "commercant" vers son tableau de bord (étape 31).
 */
 const PAGES_ACCUEIL = {
-  client: '/liste-etablissements.html',
-  commercant: '/commercant/tableau-de-bord.html'
+  client: '/etablissements/liste-etablissements.html',
+  commercant: '/commercant/tableau-de-bord/tableau-de-bord.html'
 };
 
 
@@ -44,7 +44,7 @@ export function redirigerApresConnexion(role) {
 export async function deconnecter() {
   await appeler('POST', '/api/auth/deconnexion', undefined, { sansRedirection: true });
 
-  window.location.href = '/connexion.html';
+  window.location.href = '/connexion/connexion.html';
 }
 
 

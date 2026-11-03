@@ -5,8 +5,8 @@
   frontend sont des MODULES : chacun a ses propres variables, sans risque de
   collision avec les autres.
 */
-import { appeler } from './api.js';
-import { afficherMessages, pendant } from './outils.js';
+import { appeler } from '/partage/js/api.js';
+import { afficherMessages, pendant } from '/partage/js/outils.js';
 
 const zone = document.getElementById('resultat');
 const boutonSante = document.getElementById('btn-sante');

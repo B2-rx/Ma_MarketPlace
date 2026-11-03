@@ -1,5 +1,5 @@
 /* ===== page-suivi-commande.js : le suivi d'une commande ===== */
-import { appeler } from './api.js';
+import { appeler } from '/partage/js/api.js';
 import {
   afficherMessages,
   creerElement,
@@ -7,7 +7,7 @@ import {
   formaterDate,
   formaterPrix,
   pendant
-} from './outils.js';
+} from '/partage/js/outils.js';
 
 
 /* ===== Réglages ===== */
@@ -124,7 +124,7 @@ function afficherCommande(commande) {
 
   champNumero.textContent = String(commande.id);
   lienBoutique.textContent = commande.boutique.nom;
-  lienBoutique.href = '/fiche-etablissement.html?id=' + encodeURIComponent(commande.boutique.id);
+  lienBoutique.href = '/etablissements/fiche-etablissement.html?id=' + encodeURIComponent(commande.boutique.id);
 
   // Le libellé vient du serveur : « En attente de validation du commerçant »...
   badgeStatut.textContent = commande.statutLibelle;

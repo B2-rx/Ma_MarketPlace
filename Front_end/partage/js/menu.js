@@ -10,20 +10,20 @@ import { lireUtilisateur, deconnecter } from './session.js';
 */
 const MENUS = {
   visiteur: [
-    { texte: 'Établissements', lien: '/liste-etablissements.html' },
-    { texte: 'Connexion', lien: '/connexion.html' },
-    { texte: 'Inscription', lien: '/inscription.html' }
+    { texte: 'Établissements', lien: '/etablissements/liste-etablissements.html' },
+    { texte: 'Connexion', lien: '/connexion/connexion.html' },
+    { texte: 'Inscription', lien: '/inscription/inscription.html' }
   ],
   client: [
-    { texte: 'Établissements', lien: '/liste-etablissements.html' },
-    { texte: 'Panier', lien: '/panier.html' },
-    { texte: 'Mes commandes', lien: '/mes-commandes.html' }
+    { texte: 'Établissements', lien: '/etablissements/liste-etablissements.html' },
+    { texte: 'Panier', lien: '/panier/panier.html' },
+    { texte: 'Mes commandes', lien: '/commandes/mes-commandes.html' }
   ],
   commercant: [
-    { texte: 'Commandes', lien: '/commercant/tableau-de-bord.html' },
-    { texte: 'Historique', lien: '/commercant/historique-commandes.html' },
-    { texte: 'Ma boutique', lien: '/commercant/ma-boutique.html' },
-    { texte: 'Produits', lien: '/commercant/produits.html' }
+    { texte: 'Commandes', lien: '/commercant/tableau-de-bord/tableau-de-bord.html' },
+    { texte: 'Historique', lien: '/commercant/historique-commandes/historique-commandes.html' },
+    { texte: 'Ma boutique', lien: '/commercant/ma-boutique/ma-boutique.html' },
+    { texte: 'Produits', lien: '/commercant/produits/produits.html' }
   ]
 };
 

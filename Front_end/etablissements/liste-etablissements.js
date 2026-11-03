@@ -1,7 +1,7 @@
 /* ===== boutiques.js : la liste des établissements ===== */
-import { appeler } from './api.js';
-import { SECTEURS, libelleSecteur } from './secteurs.js';
-import { afficherMessages, creerElement, creerImage } from './outils.js';
+import { appeler } from '/partage/js/api.js';
+import { SECTEURS, libelleSecteur } from '/partage/js/secteurs.js';
+import { afficherMessages, creerElement, creerImage } from '/partage/js/outils.js';
 
 const zoneFiltres = document.getElementById('filtres');
 const zoneMessages = document.getElementById('messages');
@@ -36,7 +36,7 @@ function creerCarte(boutique) {
   const lien = creerElement('a', boutique.nom);
 
   // L'identifiant est un entier fabriqué par le serveur
-  lien.href = '/fiche-etablissement.html?id=' + encodeURIComponent(boutique.id);
+  lien.href = '/etablissements/fiche-etablissement.html?id=' + encodeURIComponent(boutique.id);
   titre.append(lien);
 
   texte.append(titre, creerElement('span', libelleSecteur(boutique.secteur), 'badge'));
@@ -105,7 +105,7 @@ function choisir(secteur) {
   window.history.replaceState(
     null,
     '',
-    secteur ? '/liste-etablissements.html?secteur=' + encodeURIComponent(secteur) : '/liste-etablissements.html'
+    secteur ? '/etablissements/liste-etablissements.html?secteur=' + encodeURIComponent(secteur) : '/etablissements/liste-etablissements.html'
   );
 
   charger(secteur);
