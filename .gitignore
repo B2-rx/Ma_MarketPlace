@@ -30,3 +30,6 @@ Rapport j-3.docx
 # ===== Bloc 6 : sauvegardes locales =====
 Back_end/sauvegardes/
 
+
+# ===== Bloc 7 : fichiers de rangement a usage unique =====
+rangement-front.ps1 

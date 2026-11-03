@@ -1,17 +1,17 @@
 ### 1. Page de connexion
-GET http://localhost:3000/connexion.html
+GET http://localhost:3000/connexion/connexion.html
 
 ### 2. Page d'inscription, sans l'extension
-GET http://localhost:3000/inscription
+GET http://localhost:3000/inscription/inscription.html
 
 ### 3. Module du menu
-GET http://localhost:3000/js/menu.js
+GET http://localhost:3000/partage/js/menu.js
 
 ### 4. Module de session
-GET http://localhost:3000/js/session.js
+GET http://localhost:3000/partage/js/session.js
 
 ### 5. Module de validation
-GET http://localhost:3000/js/validation.js
+GET http://localhost:3000/partage/js/validation.js
 
 ### 6. Le code du serveur n'est pas servi
 GET http://localhost:3000/Back_end/session-store.js

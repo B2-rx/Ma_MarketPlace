@@ -1,0 +1,38 @@
+/* ===== Inscription : choix Client / Commerçant ===== */
+
+.choix-role {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.choix-role legend {
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.option-role {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 2px solid var(--bordure);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.option-role:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--texte-sur-accent);
+  font-weight: 700;
+}
+
+.option-role:focus-within {
+  outline: 3px solid var(--texte);
+  outline-offset: 2px;
+}

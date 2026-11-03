@@ -1,0 +1,63 @@
+/* ===== Page du panier ===== */
+
+.ligne-panier {
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--trait);
+}
+
+.ligne-panier:last-child {
+  border-bottom: 0;
+}
+
+.ligne-panier .carte-texte {
+  flex: 1 1 180px;
+}
+
+.quantite-controle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-quantite {
+  width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--texte);
+  border-radius: 10px;
+  background: var(--carte);
+  color: var(--texte);
+  font: 700 18px system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.btn-quantite:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.quantite-valeur {
+  min-width: 2ch;
+  font-weight: 700;
+  text-align: center;
+}
+
+.badge-alerte {
+  border: 1px solid var(--erreur-bordure);
+  background: var(--erreur-fond);
+  color: var(--erreur-texte);
+}
+
+
+/* ===== Commande : adresse de livraison ===== */
+
+.bloc-commande {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--trait);
+}
+
+textarea.champ {
+  min-height: 96px;
+  resize: vertical;
+}

@@ -1,6 +1,6 @@
 /* ===== page-tableau-de-bord.js : le tableau de bord du commerçant ===== */
-import { appeler } from './api.js';
-import { lireUtilisateur } from './session.js';
+import { appeler } from '/partage/js/api.js';
+import { lireUtilisateur } from '/partage/js/session.js';
 import {
   afficherMessages,
   creerElement,
@@ -8,7 +8,7 @@ import {
   formaterDate,
   formaterPrix,
   pendant
-} from './outils.js';
+} from '/partage/js/outils.js';
 
 
 /* ===== Réglages ===== */
@@ -61,7 +61,7 @@ const DELAI_ACTUALISATION = 30 * 1000;
 // ⚠️ Même règle que l'inscription (Back_end/routes/auth.js)
 const REGEX_TELEPHONE = /^\+?[0-9 .-]{8,20}$/;
 
-const ADRESSE_PAGE = '/commercant/tableau-de-bord.html';
+const ADRESSE_PAGE = '/commercant/tableau-de-bord/tableau-de-bord.html';
 
 const formatHeure = new Intl.DateTimeFormat('fr-FR', { timeStyle: 'short' });
 
@@ -503,7 +503,7 @@ function demarrer() {
 const utilisateur = await lireUtilisateur();
 
 if (utilisateur === null) {
-  window.location.href = '/connexion.html?retour=' + ADRESSE_PAGE;
+  window.location.href = '/connexion/connexion.html?retour=' + ADRESSE_PAGE;
 } else if (utilisateur.role !== 'commercant') {
   tableau.hidden = true;
   afficherMessages(zoneMessages, 'erreur', ['Cette page est réservée aux commerçants.']);

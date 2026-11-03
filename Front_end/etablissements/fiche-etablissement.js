@@ -1,15 +1,15 @@
 /* ===== fiche-etablissement.js : un établissement et ses produits ===== */
-import { appeler } from './api.js';
-import { ajouterAuPanier } from './ajout-panier.js';
-import { libelleSecteur } from './secteurs.js';
-import { lireUtilisateur } from './session.js';
+import { appeler } from '/partage/js/api.js';
+import { ajouterAuPanier } from '/panier/ajout-panier.js';
+import { libelleSecteur } from '/partage/js/secteurs.js';
+import { lireUtilisateur } from '/partage/js/session.js';
 import {
   afficherMessages,
   creerElement,
   creerImage,
   formaterPrix,
   pendant
-} from './outils.js';
+} from '/partage/js/outils.js';
 
 /*
   Quantité maximale d'un même produit dans un panier.

@@ -1,0 +1,85 @@
+/* ===== Liste des établissements ===== */
+
+/* Grille responsive : autant de colonnes que la largeur le permet */
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.grille .carte {
+  margin-bottom: 0;
+}
+
+.carte-boutique {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.vignette,
+.vignette-vide {
+  flex: none;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background: #C9CCC3;
+}
+
+.vignette {
+  object-fit: cover;
+}
+
+.vignette-vide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texte-doux);
+  font-size: 12px;
+  text-align: center;
+}
+
+
+/* ===== Fiche d'un établissement ===== */
+
+.bloc-banniere {
+  margin-bottom: 12px;
+}
+
+.banniere,
+.banniere-vide {
+  display: block;
+  width: 100%;
+  height: 180px;
+  border-radius: var(--rayon);
+  background: #C9CCC3;
+}
+
+.banniere {
+  object-fit: cover;
+}
+
+.banniere-vide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texte-doux);
+}
+
+.nom-boutique {
+  overflow-wrap: anywhere;
+}
+
+/* Quantité et bouton « Ajouter » d'un produit */
+.commande-produit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.champ.quantite {
+  width: 72px;
+  margin: 0;
+  padding: 0 8px;
+  text-align: center;
+}

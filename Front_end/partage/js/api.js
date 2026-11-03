@@ -70,7 +70,7 @@ export async function appeler(methode, adresse, corps, options) {
     avant de l'utiliser (sinon, redirection vers un site pirate).
   */
   if (reponse.status === 401 && !reglages.sansRedirection) {
-    window.location.href = '/connexion.html?retour=' + encodeURIComponent(window.location.pathname);
+    window.location.href = '/connexion/connexion.html?retour=' + encodeURIComponent(window.location.pathname);
   }
 
   return {

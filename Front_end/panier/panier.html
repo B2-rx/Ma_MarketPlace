@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mon panier · Ma MarketPlace</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <script type="module" src="/js/menu.js"></script>
-  <script type="module" src="/js/page-panier.js"></script>
+  <link rel="stylesheet" href="/partage/css/style.css">
+  <link rel="stylesheet" href="/panier/panier.css">
+  <script type="module" src="/partage/js/menu.js"></script>
+  <script type="module" src="/panier/page-panier.js"></script>
 </head>
 
 <body>
@@ -23,14 +24,14 @@
     <!-- Panier sans produit -->
     <section id="panier-vide" class="carte" hidden>
       <p>Ton panier est vide.</p>
-      <a href="/liste-etablissements.html">Voir les établissements</a>
+      <a href="/etablissements/liste-etablissements.html">Voir les établissements</a>
     </section>
 
     <!-- Panier rempli : cachée tant que rien n'est chargé -->
     <section id="panier-contenu" class="carte" hidden>
       <p class="discret">
         Établissement :
-        <a id="nom-boutique" href="/liste-etablissements.html"></a>
+        <a id="nom-boutique" href="/etablissements/liste-etablissements.html"></a>
       </p>
 
       <ul id="liste-panier" class="liste-produits"></ul>

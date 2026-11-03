@@ -1,13 +1,13 @@
 /* ===== page-panier.js : la page « Mon panier » ===== */
-import { appeler } from './api.js';
+import { appeler } from '/partage/js/api.js';
 import {
   afficherMessages,
   creerElement,
   demanderConfirmation,
   formaterPrix,
   pendant
-} from './outils.js';
-import { ADRESSE_MAX, ADRESSE_MIN, nettoyerAdresse } from './validation.js';
+} from '/partage/js/outils.js';
+import { ADRESSE_MAX, ADRESSE_MIN, nettoyerAdresse } from '/partage/js/validation.js';
 
 /* ⚠️ Doit rester identique à QUANTITE_MAX dans Back_end/routes/panier.js. */
 const QUANTITE_MAX = 20;
@@ -109,7 +109,7 @@ function afficherPanier(panier) {
 
   // L'identifiant est un entier fabriqué par le serveur
   lienBoutique.textContent = panier.boutique.nom;
-  lienBoutique.href = '/fiche-etablissement.html?id=' + encodeURIComponent(panier.boutique.id);
+  lienBoutique.href = '/etablissements/fiche-etablissement.html?id=' + encodeURIComponent(panier.boutique.id);
 
   liste.replaceChildren();
 
@@ -233,7 +233,7 @@ formulaireCommande.addEventListener('submit', (evenement) => {
 
     // Commande créée (201) : on affiche son suivi
     if (reponse.ok) {
-      window.location.href = '/suivi-commande.html?id='
+      window.location.href = '/commandes/suivi-commande.html?id='
         + encodeURIComponent(reponse.donnees.commande.id);
       return;
     }
