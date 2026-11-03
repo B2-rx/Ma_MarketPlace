@@ -9,7 +9,7 @@ import { lireRetour } from './outils.js';
 */
 const PAGES_ACCUEIL = {
   client: '/liste-etablissements.html',
-  commercant: '/'
+  commercant: '/commercant/tableau-de-bord.html'
 };
 
 
