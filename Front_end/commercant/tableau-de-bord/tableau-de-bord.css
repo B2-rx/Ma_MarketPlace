@@ -1,0 +1,87 @@
+/* ===== Tableau de bord du commerçant ===== */
+
+h3 {
+  margin: 16px 0 4px;
+  font-size: 16px;
+}
+
+.tableau {
+  display: grid;
+  gap: 16px;
+}
+
+.panneau-liste,
+.panneau-detail {
+  min-width: 0;
+}
+
+/* Téléphone : on affiche la liste OU le détail */
+.tableau:not(.detail-ouvert) .panneau-detail {
+  display: none;
+}
+
+.tableau.detail-ouvert .panneau-liste {
+  display: none;
+}
+
+/* Ordinateur : les deux panneaux côte à côte, le bouton retour n'a plus de raison d'être */
+@media (min-width: 900px) {
+  .tableau {
+    grid-template-columns: 380px 1fr;
+    align-items: start;
+  }
+
+  .tableau:not(.detail-ouvert) .panneau-detail,
+  .tableau.detail-ouvert .panneau-liste {
+    display: block;
+  }
+
+  .btn-retour-liste {
+    display: none;
+  }
+}
+
+.ligne-actualiser {
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+/* Une commande de la liste : un bouton qui a l'allure d'une carte */
+.carte-commande {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 2px solid transparent;
+  border-radius: var(--rayon);
+  background: var(--carte);
+  color: var(--texte);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.carte-commande:hover {
+  border-color: var(--trait);
+}
+
+/* La commande ouverte : contour accent (et aria-current pour les lecteurs d'écran) */
+.carte-commande[aria-current="true"] {
+  border-color: var(--accent);
+}
+
+.ligne-texte {
+  display: block;
+  margin-top: 4px;
+}
+
+.actions-commande {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.actions-commande .bouton {
+  flex: 1 1 200px;
+}

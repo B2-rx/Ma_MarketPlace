@@ -104,16 +104,14 @@ a {
   gap: 10px;
 }
 
-/* Grille responsive : autant de colonnes que la largeur le permet */
-.grille {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-}
-
 .discret {
   color: var(--texte-doux);
   font-size: 14px;
+}
+
+/* Aligne les éléments d'une ligne à gauche */
+.ligne-gauche {
+  justify-content: flex-start;
 }
 
 
@@ -150,6 +148,26 @@ a {
   cursor: not-allowed;
 }
 
+/* Un lien qui a l'allure d'un bouton */
+.bouton-lien {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Bouton qui a l'allure d'un lien (« Retirer », « Retour ») */
+.lien-bouton {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--texte);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 
 /* ===== Formulaires ===== */
 
@@ -165,6 +183,33 @@ a {
   background: var(--carte);
   color: var(--texte);
   font: 16px system-ui, sans-serif;
+}
+
+.conteneur-etroit {
+  max-width: 460px;
+}
+
+.bouton-plein {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.centre {
+  text-align: center;
+}
+
+/* Case à cocher avec sa phrase, assez grande pour un doigt */
+.case {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 8px;
+}
+
+.case input {
+  width: 20px;
+  height: 20px;
 }
 
 
@@ -202,6 +247,13 @@ a {
   background: var(--accent);
   color: var(--texte-sur-accent);
   font-weight: 700;
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 20px;
 }
 
 
@@ -247,13 +299,6 @@ a {
 }
 
 
-/* Aligne les éléments d'une ligne à gauche */
-.ligne-gauche {
-  justify-content: flex-start;
-}
-
-
-
 /* ===== Menu principal ===== */
 
 .menu {
@@ -289,91 +334,12 @@ a {
 }
 
 
-/* ===== Formulaires : mise en page ===== */
+/* ===== Composants utilisés par plusieurs pages ===== */
 
-.conteneur-etroit {
-  max-width: 460px;
-}
-
-.bouton-plein {
-  width: 100%;
-  margin-top: 8px;
-}
-
-.centre {
-  text-align: center;
-}
-
-/* Case à cocher avec sa phrase, assez grande pour un doigt */
-.case {
-  display: flex;
+.lien-retour {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
   min-height: 44px;
-  margin-bottom: 8px;
-}
-
-.case input {
-  width: 20px;
-  height: 20px;
-}
-
-/* Choix Client / Commerçant */
-.choix-role {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 0 0 12px;
-  padding: 0;
-  border: 0;
-}
-
-.choix-role legend {
-  margin-bottom: 6px;
-  padding: 0;
-}
-
-.option-role {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 46px;
-  padding: 0 12px;
-  border: 2px solid var(--bordure);
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.option-role:has(input:checked) {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--texte-sur-accent);
-  font-weight: 700;
-}
-
-.option-role:focus-within {
-  outline: 3px solid var(--texte);
-  outline-offset: 2px;
-}
-
-
-/* ===== Établissements ===== */
-
-.filtres {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0 20px;
-}
-
-.grille .carte {
-  margin-bottom: 0;
-}
-
-.carte-boutique {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
 }
 
 .carte-texte {
@@ -386,86 +352,33 @@ a {
   overflow-wrap: anywhere;
 }
 
-/* Description limitée à 3 lignes dans la liste */
+/* Description limitée à 3 lignes */
 .carte-texte p {
   display: -webkit-box;
   margin: 6px 0 0;
   overflow: hidden;
   overflow-wrap: anywhere;
-  /* -webkit-line-clamp: 3;  ------------------------------------------*/
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
-.vignette,
-.vignette-vide {
-  flex: none;
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  background: #C9CCC3;
-}
-
-.vignette {
-  object-fit: cover;
-}
-
-.vignette-vide {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--texte-doux);
-  font-size: 12px;
-  text-align: center;
-}
-
-
-/* ===== Page d'une boutique ===== */
-
-.lien-retour {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-}
-
-.bloc-banniere {
-  margin-bottom: 12px;
-}
-
-.banniere,
-.banniere-vide {
-  display: block;
-  width: 100%;
-  height: 180px;
-  border-radius: var(--rayon);
-  background: #C9CCC3;
-}
-
-.banniere {
-  object-fit: cover;
-}
-
-.banniere-vide {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--texte-doux);
-}
-
-.nom-boutique {
-  overflow-wrap: anywhere;
-}
-
+/* Liste de produits : fiche d'un établissement, suivi, tableau de bord */
 .liste-produits {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Sur téléphone, les contrôles passent sous le nom du produit */
 .produit {
+  flex-wrap: wrap;
   gap: 16px;
   padding: 12px 0;
   border-bottom: 1px solid var(--trait);
-  flex-wrap: nowrap;
+}
+
+.produit .carte-texte {
+  flex: 1 1 180px;
 }
 
 .produit:last-child {
@@ -488,31 +401,8 @@ a {
   white-space: nowrap;
 }
 
-
-
-
-/* ===== Ajout au panier ===== */
-
-/* Sur téléphone, les contrôles passent sous le nom du produit */
-.produit {
-  flex-wrap: wrap;
-}
-
-.produit .carte-texte {
-  flex: 1 1 180px;
-}
-
-.commande-produit {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.champ.quantite {
-  width: 72px;
-  margin: 0;
-  padding: 0 8px;
-  text-align: center;
+.total-panier {
+  font-size: 20px;
 }
 
 
@@ -537,77 +427,6 @@ dialog::backdrop {
   gap: 8px;
   margin-top: 16px;
 }
-
-
-/* ===== Page du panier ===== */
-
-.ligne-panier {
-  gap: 12px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--trait);
-}
-
-.ligne-panier:last-child {
-  border-bottom: 0;
-}
-
-.ligne-panier .carte-texte {
-  flex: 1 1 180px;
-}
-
-.quantite-controle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-quantite {
-  width: 44px;
-  min-height: 44px;
-  border: 1px solid var(--texte);
-  border-radius: 10px;
-  background: var(--carte);
-  color: var(--texte);
-  font: 700 18px system-ui, sans-serif;
-  cursor: pointer;
-}
-
-.btn-quantite:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.quantite-valeur {
-  min-width: 2ch;
-  font-weight: 700;
-  text-align: center;
-}
-
-/* Bouton qui a l'allure d'un lien (« Retirer ») */
-.lien-bouton {
-  min-height: 44px;
-  padding: 0 4px;
-  border: 0;
-  background: transparent;
-  color: var(--texte);
-  font: inherit;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.total-panier {
-  font-size: 20px;
-}
-
-.badge-alerte {
-  border: 1px solid var(--erreur-bordure);
-  background: var(--erreur-fond);
-  color: var(--erreur-texte);
-}
-
-
-
-/* ===== Boîte de dialogue avec croix de fermeture ===== */
 
 .dialogue-entete {
   display: flex;
@@ -638,162 +457,3 @@ dialog::backdrop {
 .bouton-fermer:hover {
   background: var(--trait);
 }
-
-/* Un lien qui a l'allure d'un bouton */
-.bouton-lien {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
-
-
-
-/* ===== Commande : formulaire du panier ===== */
-
-.bloc-commande {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--trait);
-}
-
-textarea.champ {
-  min-height: 96px;
-  resize: vertical;
-}
-
-
-/* ===== Suivi d'une commande ===== */
-
-/* Les quatre étapes du cycle de vie, en barres de progression */
-.etapes {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin: 16px 0 8px;
-  padding: 0;
-  list-style: none;
-}
-
-.etape {
-  padding-top: 8px;
-  border-top: 6px solid var(--trait);
-  color: var(--texte-doux);
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-
-.etape-faite {
-  border-top-color: var(--accent);
-  color: var(--texte);
-}
-
-.etape-courante {
-  border-top-color: var(--accent);
-  color: var(--texte);
-  font-weight: 700;
-}
-
-.actions-suivi {
-  display: grid;
-  gap: 8px;
-  max-width: 420px;
-  margin-top: 16px;
-}
-
-.actions-suivi p {
-  margin: 0;
-}
-
-
-/* ===== Tableau de bord du commerçant ===== */
-
-h3 {
-  margin: 16px 0 4px;
-  font-size: 16px;
-}
-
-.tableau {
-  display: grid;
-  gap: 16px;
-}
-
-.panneau-liste,
-.panneau-detail {
-  min-width: 0;
-}
-
-/* Téléphone : on affiche la liste OU le détail */
-.tableau:not(.detail-ouvert) .panneau-detail {
-  display: none;
-}
-
-.tableau.detail-ouvert .panneau-liste {
-  display: none;
-}
-
-/* Ordinateur : les deux panneaux côte à côte, le bouton retour n'a plus de raison d'être */
-@media (min-width: 900px) {
-  .tableau {
-    grid-template-columns: 380px 1fr;
-    align-items: start;
-  }
-
-  .tableau:not(.detail-ouvert) .panneau-detail,
-  .tableau.detail-ouvert .panneau-liste {
-    display: block;
-  }
-
-  .btn-retour-liste {
-    display: none;
-  }
-}
-
-.ligne-actualiser {
-  justify-content: flex-start;
-  margin-bottom: 12px;
-}
-
-/* Une commande de la liste : un bouton qui a l'allure d'une carte */
-.carte-commande {
-  display: block;
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 14px;
-  border: 2px solid transparent;
-  border-radius: var(--rayon);
-  background: var(--carte);
-  color: var(--texte);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.carte-commande:hover {
-  border-color: var(--trait);
-}
-
-/* La commande ouverte : contour accent (et aria-current pour les lecteurs d'écran) */
-.carte-commande[aria-current="true"] {
-  border-color: var(--accent);
-}
-
-.ligne-texte {
-  display: block;
-  margin-top: 4px;
-}
-
-.actions-commande {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.actions-commande .bouton {
-  flex: 1 1 200px;
-}
-
-
-
-
