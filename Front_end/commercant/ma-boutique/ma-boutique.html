@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ma boutique · Ma MarketPlace</title>
+
+  <link rel="stylesheet" href="/partage/css/style.css">
+  <link rel="stylesheet" href="/commercant/ma-boutique/ma-boutique.css">
+
+  <script type="module" src="/partage/js/menu.js"></script>
+  <script type="module" src="/commercant/ma-boutique/page-ma-boutique.js"></script>
+
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="page-boutique">
+  <h1>Ma boutique</h1>
+
+  <!-- Zone où s'affichent les messages de succès et d'erreur -->
+  <div id="messages"></div>
+
+  <!-- Bloc 1 : informations texte -->
+  <section class="carte">
+    <h2>Informations</h2>
+    <form id="formulaire-boutique" novalidate>
+      <label for="champ-nom">Nom de la boutique</label>
+      <input id="champ-nom" name="nom" type="text" maxlength="60" required>
+
+      <label for="champ-secteur">Secteur</label>
+      <select id="champ-secteur" name="secteur" required></select>
+
+      <label for="champ-description">Description</label>
+      <textarea id="champ-description" name="description" rows="5" maxlength="500"></textarea>
+      <p class="aide"><span id="compteur">0</span> / 500 caractères</p>
+
+      <button type="submit" class="bouton">Enregistrer</button>
+    </form>
+  </section>
+
+  <!-- Bloc 2 : image (envoyée à part, car c'est un fichier) -->
+  <section class="carte">
+    <h2>Image</h2>
+    <img id="apercu-image" class="apercu-image" alt="Image de la boutique" hidden>
+    <p id="sans-image">Aucune image pour le moment.</p>
+
+    <form id="formulaire-image" novalidate>
+      <label for="champ-fichier">Choisir une image (JPEG, PNG ou WebP, 2 Mo maximum)</label>
+      <input id="champ-fichier" type="file" accept="image/jpeg,image/png,image/webp">
+      <button type="submit" class="bouton">Envoyer l'image</button>
+    </form>
+  </section>
+</main>
+</body>
+</html>

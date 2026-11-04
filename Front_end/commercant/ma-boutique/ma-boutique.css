@@ -1,0 +1,62 @@
+/* ============================================================
+   ma-boutique.css : styles propres à la page Ma boutique
+   Les couleurs de base viennent de partage/css/style.css.
+   ============================================================ */
+
+.page-boutique {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Espace entre les champs du formulaire */
+.page-boutique label {
+  display: block;
+  margin: 16px 0 6px;
+  font-weight: 600;
+}
+
+.page-boutique input[type="text"],
+.page-boutique select,
+.page-boutique textarea {
+  width: 100%;
+  min-height: 44px; /* cible tactile confortable */
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.page-boutique .aide {
+  margin: 4px 0 16px;
+  font-size: 0.9rem;
+}
+
+/* Aperçu de l'image : jamais plus large que la carte */
+.apercu-image {
+  display: block;
+  max-width: 100%;
+  max-height: 240px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+
+/* Bouton natif « Choisir un fichier » : seul ::file-selector-button permet de le styler */
+.page-boutique input[type="file"] {
+ /* display: block;*/
+  width: 50%;
+  margin-bottom: 10px;
+}
+
+.page-boutique input[type="file"]::file-selector-button {
+  min-height: 40px;
+  padding: 0 14px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 6px; /* À MODIFIER pour égaler le rayon de .bouton dans style.css */
+  background: #15E2B6;
+  color: #1b1b1b;
+  font: inherit;
+  font-weight: 550;
+  cursor: pointer;
+}
