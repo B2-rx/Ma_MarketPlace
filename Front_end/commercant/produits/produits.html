@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Produits · Ma MarketPlace</title>
+
+  <link rel="stylesheet" href="/partage/css/style.css">
+  <link rel="stylesheet" href="/commercant/produits/produits.css">
+
+  <script type="module" src="/partage/js/menu.js"></script>
+  <script type="module" src="/commercant/produits/produits.js"></script>
+
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+    <main class="page-produits">
+  <h1>Mes produits</h1>
+  <div id="messages"></div>
+
+  <!-- Formulaire unique : sert à ajouter ET à modifier -->
+  <section class="carte">
+    <h2 id="titre-formulaire">Ajouter un produit</h2>
+    <form id="formulaire-produit" novalidate>
+      <label for="champ-nom">Nom</label>
+      <input id="champ-nom" type="text" maxlength="80" required>
+
+      <label for="champ-prix">Prix en FCFA (nombre entier)</label>
+      <input id="champ-prix" type="text" inputmode="numeric" autocomplete="off" required>
+
+      <label for="champ-description">Description (facultative)</label>
+      <textarea id="champ-description" rows="3" maxlength="300"></textarea>
+
+      <label class="ligne-case">
+        <input id="champ-disponible" type="checkbox" checked>
+        Disponible à la commande
+      </label>
+
+      <button type="submit" id="bouton-enregistrer" class="bouton">Ajouter</button>
+      <button type="button" id="bouton-annuler" class="bouton" hidden>Annuler la modification</button>
+    </form>
+  </section>
+
+  <!-- Liste du catalogue : remplie par produits.js -->
+  <section>
+    <h2>Mon catalogue</h2>
+    <p id="liste-vide" hidden>Aucun produit pour le moment.</p>
+    <ul id="liste-produits" class="liste-produits"></ul>
+  </section>
+</main>  
+
+  <!-- Boîte de confirmation de suppression (utilisée par demanderConfirmation) -->
+<dialog id="dialogue-suppression" aria-labelledby="titre-suppression">
+  <form method="dialog">
+    <h2 id="titre-suppression">Supprimer ce produit ?</h2>
+    <p id="texte-suppression"></p>
+    <div class="dialogue-boutons">
+      <!-- value="oui" est la valeur que demanderConfirmation attend pour confirmer -->
+      <button type="submit" value="non" class="bouton">Annuler</button>
+      <button type="submit" value="oui" class="bouton">Supprimer</button>
+    </div>
+  </form>
+</dialog>
+
+</body>
+</html>

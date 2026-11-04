@@ -1,0 +1,104 @@
+/* ============================================================
+   produits.css : styles propres à la page Produits
+   ============================================================ */
+
+.page-produits {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.page-produits label {
+  display: block;
+  margin: 16px 0 6px;
+  font-weight: 600;
+}
+
+.page-produits input[type="text"],
+.page-produits textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+/* La case à cocher et son texte sur une même ligne */
+.ligne-case {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.liste-produits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+/* Une carte blanche par produit */
+.produit {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* Produit indisponible : légèrement estompé */
+.produit-indisponible {
+  opacity: 0.7;
+}
+
+.produit-prix {
+  font-weight: 700;
+}
+
+.pastille {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #15E2B6; /* accent du projet, texte foncé */
+  color: #1b1b1b;
+  font-size: 0.85rem;
+}
+
+.produit-indisponible .pastille {
+  background: #d9d9d4;
+}
+
+.produit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.produit-actions .bouton {
+  min-height: 44px;
+}
+
+
+/* Boîte de confirmation de suppression */
+#dialogue-suppression {
+  width: calc(100% - 32px);
+  max-width: 420px;
+  padding: 20px;
+  border: none;
+  border-radius: 12px;
+}
+
+#dialogue-suppression::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.dialogue-boutons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+
+
+
