@@ -113,12 +113,12 @@ async function chargerProduits() {
   const r = await appeler('GET', '/api/produits');
   if (r.statut === 404) {
     /* Pas de boutique : le serveur refuse le catalogue (chargerBoutique) */
-    afficherMessages(zoneMessages, ["Créez d'abord votre boutique dans « Ma boutique »."], 'erreur');
+    afficherMessages(zoneMessages, 'erreur', ["Créez d'abord votre boutique dans « Ma boutique »."]);
     formulaire.hidden = true;
     return;
   }
   if (!r.ok) {
-    afficherMessages(zoneMessages, r.erreurs, 'erreur');
+    afficherMessages(zoneMessages, 'erreur', r.erreurs);
     return;
   }
   const liste = Array.isArray(r.donnees) ? r.donnees : (r.donnees?.produits ?? []);
@@ -180,7 +180,7 @@ formulaire.addEventListener('submit', async (evenement) => {
 
   const erreurs = verifierProduit(corps);
   if (erreurs.length > 0) {
-    afficherMessages(zoneMessages, erreurs, 'erreur');
+    afficherMessages(zoneMessages, 'erreur', erreurs);
     return;
   }
 
@@ -189,10 +189,10 @@ formulaire.addEventListener('submit', async (evenement) => {
     const adresse = idEnEdition === null ? '/api/produits' : `/api/produits/${idEnEdition}`;
     const r = await appeler(methode, adresse, corps);
     if (!r.ok) {
-      afficherMessages(zoneMessages, r.erreurs, 'erreur');
+      afficherMessages(zoneMessages, 'erreur', r.erreurs);
       return;
     }
-    afficherMessages(zoneMessages, [idEnEdition === null ? 'Produit ajouté.' : 'Produit modifié.'], 'succes');
+    afficherMessages(zoneMessages, 'ok', [idEnEdition === null ? 'Produit ajouté.' : 'Produit modifié.']);
     reinitialiserFormulaire();
     await chargerProduits();
   });
@@ -210,7 +210,7 @@ async function basculerDisponibilite(produit) {
   };
   const r = await appeler('PUT', `/api/produits/${produit.id}`, corps);
   if (!r.ok) {
-    afficherMessages(zoneMessages, r.erreurs, 'erreur');
+    afficherMessages(zoneMessages, 'erreur', r.erreurs);
     return;
   }
   await chargerProduits();
@@ -227,11 +227,11 @@ async function supprimer(produit) {
 
   const r = await appeler('DELETE', `/api/produits/${produit.id}`);
   if (!r.ok) {
-    afficherMessages(zoneMessages, r.erreurs, 'erreur');
+    afficherMessages(zoneMessages, 'erreur', r.erreurs);
     return;
   }
   if (idEnEdition === produit.id) reinitialiserFormulaire();
-  afficherMessages(zoneMessages, ['Produit supprimé.'], 'succes');
+  afficherMessages(zoneMessages, 'ok', ['Produit supprimé.']);
   await chargerProduits();
 }
 

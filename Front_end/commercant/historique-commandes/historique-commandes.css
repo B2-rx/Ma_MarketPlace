@@ -1,0 +1,50 @@
+/* ===== Historique des commandes du commerçant ===== */
+
+/* Résumé : 2 blocs par ligne sur téléphone, 4 sur ordinateur */
+.resume {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+@media (min-width: 900px) {
+  .resume {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* .carte a une marge basse : ici la grille gère déjà l'espace */
+.resume-bloc {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.resume-valeur {
+  font-size: 22px;
+}
+
+.liste-historique {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.carte-historique {
+  margin: 0;
+}
+
+.carte-historique p {
+  margin: 4px 0 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
