@@ -89,7 +89,7 @@ async function chargerBoutique() {
   const r = await appeler('GET', '/api/boutiques/ma-boutique');
   if (r.statut === 404) return; /* pas encore de boutique : formulaire vide */
   if (!r.ok) {
-    afficherMessages(zoneMessages, r.erreurs, 'erreur');
+    afficherMessages(zoneMessages, 'erreur', r.erreurs);
     return;
   }
   const b = lireBoutique(r.donnees);
@@ -123,15 +123,15 @@ formulaireBoutique.addEventListener('submit', async (evenement) => {
   };
   const erreurs = verifierBoutique(corps);
   if (erreurs.length > 0) {
-    afficherMessages(zoneMessages, erreurs, 'erreur');
+    afficherMessages(zoneMessages, 'erreur', erreurs);
     return;
   }
 
   const bouton = formulaireBoutique.querySelector('button[type="submit"]');
   await pendant(bouton, async () => {
     const r = await appeler('PUT', '/api/boutiques/ma-boutique', corps);
-    if (r.ok) afficherMessages(zoneMessages, ['Boutique enregistrée.'], 'succes');
-    else afficherMessages(zoneMessages, r.erreurs, 'erreur');
+    if (r.ok) afficherMessages(zoneMessages, 'ok', ['Boutique enregistrée.']);
+    else afficherMessages(zoneMessages, 'erreur', r.erreurs);
   });
 });
 
@@ -145,15 +145,15 @@ formulaireImage.addEventListener('submit', async (evenement) => {
 
   const fichier = champFichier.files[0];
   if (!fichier) {
-    afficherMessages(zoneMessages, ['Choisissez un fichier.'], 'erreur');
+    afficherMessages(zoneMessages, 'erreur', ['Choisissez un fichier.']);
     return;
   }
   if (!TYPES_IMAGE.includes(fichier.type)) {
-    afficherMessages(zoneMessages, ['Format accepté : JPEG, PNG ou WebP.'], 'erreur');
+    afficherMessages(zoneMessages, 'erreur', ['Format accepté : JPEG, PNG ou WebP.']);
     return;
   }
   if (fichier.size > TAILLE_IMAGE_MAX) {
-    afficherMessages(zoneMessages, ['Image trop lourde (2 Mo maximum).'], 'erreur');
+    afficherMessages(zoneMessages, 'erreur', ['Image trop lourde (2 Mo maximum).']);
     return;
   }
 
@@ -170,7 +170,7 @@ formulaireImage.addEventListener('submit', async (evenement) => {
 
     if (reponse.ok) {
       champFichier.value = '';
-      afficherMessages(zoneMessages, ['Image enregistrée.'], 'succes');
+      afficherMessages(zoneMessages, 'ok', ['Image enregistrée.']);
       await chargerBoutique(); /* recharge pour afficher la nouvelle image */
       return;
     }
@@ -184,7 +184,7 @@ formulaireImage.addEventListener('submit', async (evenement) => {
     if (reponse.status === 413) message = 'Image trop lourde (2 Mo maximum).';
     else if (reponse.status === 400) message = "Image refusée : utilisez un vrai fichier JPEG, PNG ou WebP.";
     else if (reponse.status === 404) message = "Enregistrez d'abord les informations de la boutique.";
-    afficherMessages(zoneMessages, [message], 'erreur');
+    afficherMessages(zoneMessages, 'erreur', [message]);
   });
 });
 
