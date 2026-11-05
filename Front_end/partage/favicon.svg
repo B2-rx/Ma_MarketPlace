@@ -1,0 +1,6 @@
+<!-- favicon.svg : icône d'onglet de Ma MarketPlace (carré accent #15E2B6, lettre M) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#15E2B6"/>
+  <path d="M16 46V20l16 18 16-18v26" fill="none" stroke="#10231E"
+        stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
