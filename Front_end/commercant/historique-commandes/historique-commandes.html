@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Historique · Ma MarketPlace</title>
+
+  <link rel="stylesheet" href="/partage/css/style.css">
+  <link rel="stylesheet" href="/commercant/historique-commandes/historique-commandes.css">
+  
+  <script type="module" src="/partage/js/menu.js"></script>
+  <script type="module" src="/commercant/historique-commandes/page-historique-commandes.js"></script>
+</head>
+
+<body>
+  <header class="entete">
+    <a class="marque" href="/">Ma MarketPlace</a>
+    <nav id="menu" class="menu" aria-label="Navigation principale"></nav>
+  </header>
+
+  <main class="conteneur">
+    <h1>Historique des commandes</h1>
+
+    <!-- Messages (erreur du serveur, accès refusé) -->
+    <div id="messages" class="message" tabindex="-1" hidden></div>
+
+    <!-- Tout le contenu : caché si l'utilisateur n'est pas commerçant -->
+    <div id="contenu">
+
+      <!-- Résumé chiffré : toujours celui de TOUT l'historique -->
+      <section class="resume" aria-label="Résumé de l'historique">
+        <div class="carte resume-bloc">
+          <span class="discret">Commandes terminées</span>
+          <strong id="resume-terminees" class="resume-valeur">0</strong>
+        </div>
+        <div class="carte resume-bloc">
+          <span class="discret">Chiffre d'affaires (commandes terminées)</span>
+          <strong id="resume-ca" class="resume-valeur">0</strong>
+        </div>
+        <div class="carte resume-bloc">
+          <span class="discret">Commandes annulées</span>
+          <strong id="resume-annulees" class="resume-valeur">0</strong>
+        </div>
+        <div class="carte resume-bloc">
+          <span class="discret">Commandes refusées</span>
+          <strong id="resume-refusees" class="resume-valeur">0</strong>
+        </div>
+      </section>
+
+      <!-- Filtres par statut : remplis par le JavaScript -->
+      <div id="filtres" class="filtres" role="group" aria-label="Filtrer par statut"></div>
+
+      <!-- Lu par les lecteurs d'écran pendant le chargement -->
+      <p id="etat" class="discret" role="status"></p>
+
+      <ul id="liste" class="liste-historique"></ul>
+
+      <!-- Pagination : cachée s'il n'y a qu'une page -->
+      <nav id="pagination" class="pagination" aria-label="Pagination" hidden>
+        <button id="precedent" class="bouton bouton-secondaire" type="button">Précédent</button>
+        <span id="indicateur" class="discret" role="status"></span>
+        <button id="suivant" class="bouton bouton-secondaire" type="button">Suivant</button>
+      </nav>
+    </div>
+  </main>
+</body>
+</html>
